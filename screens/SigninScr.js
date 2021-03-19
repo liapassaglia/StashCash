@@ -1,14 +1,14 @@
-import React from 'react';
-import { AuthContext } from '../context';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import React from "react";
+import { AuthContext } from "../context";
+import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 
 export const SigninScr = ({ navigation }) => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const { signIn } = React.useContext(AuthContext);
-  
+
   const onCreateAccountPress = () => {
-    navigation.navigate("Signup")
+    navigation.navigate("Signup");
   };
 
   return (
@@ -54,9 +54,9 @@ export const SigninScr = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

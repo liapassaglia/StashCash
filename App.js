@@ -1,17 +1,17 @@
-import React from 'react';
-import config from './config/config'; // firebase key
-import firebase from 'firebase';
-import { Alert, SafeAreaView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import SigninScr from './screens/SigninScr';
-import SignupScr from './screens/SignupScr';
-import OverviewScr from './screens/OverviewScr';
-import BudgetingScr from './screens/BudgetingScr';
-import MoneyJarScr from './screens/MoneyJarScr';
-import DashboardScr from './screens/DashboardScr';
-import { AuthContext } from './context';
+import React from "react";
+import config from "./config/config"; // firebase key
+import firebase from "firebase";
+import { Alert, SafeAreaView } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import SigninScr from "./screens/SigninScr";
+import SignupScr from "./screens/SignupScr";
+import OverviewScr from "./screens/OverviewScr";
+import BudgetingScr from "./screens/BudgetingScr";
+import MoneyJarScr from "./screens/MoneyJarScr";
+import DashboardScr from "./screens/DashboardScr";
+import { AuthContext } from "./context";
 const AuthStack = createStackNavigator();
 const AppStack = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -47,7 +47,7 @@ const RootNavigation = ({ isAuthenticated }) => (
 );
 
 export default () => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(null);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
   // Firebase
   if (!firebase.apps.length) {
@@ -61,34 +61,56 @@ export default () => {
   const authContext = React.useMemo(() => {
     return {
       signIn: (email, password) => {
-        firebase.auth().signInWithEmailAndPassword(email, password)
-          .then(() => {
-            console.log(firebase.auth().currentUser); // Prints logged user
-            setIsAuthenticated(true);
-          }, (error) => {
-            Alert.alert(error.message); // does not work
-            console.log(error.message);
-          });
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(email, password)
+          .then(
+            () => {
+              console.log(firebase.auth().currentUser); // Prints logged user
+              setIsAuthenticated(true);
+              console.log("Login successful!");
+            },
+            (error) => {
+              //Alert.alert(error.message); // does not work
+              Alert.alert("Login error", error.message);
+              console.log("Login failed", error.message);
+            }
+          );
       },
       signUp: (email, password) => {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(() => {
-            // Should redirect to login (or login at once)
-          }, (error) => {
-            Alert.alert(error.message) // does not work
-            console.log(error.message)
-          });
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password)
+          .then(
+            () => {
+              // Should redirect to login (or login at once)
+              Alert.alert(
+                "Account succesfully created!",
+                "You will be redirected to the Login page to login."
+              );
+              setIsAuthenticated(true);
+              console.log("Signup successful!");
+            },
+            (error) => {
+              Alert.alert("Signup error", error.message);
+              console.log("Signup failed", error.message);
+            }
+          );
       },
       signOut: () => {
-        firebase.auth().signOut()
-          .then(() => {
-            Alert.alert("Signed out") // does not work
-            console.log("Signed out")
-          }, (error) => {
-            console.log(error.message)
-          });
+        firebase
+          .auth()
+          .signOut()
+          .then(
+            () => {
+              Alert.alert("Signed out"); // does not work
+              console.log("Signed out");
+            },
+            (error) => {
+              console.log(error.message);
+            }
+          );
         setIsAuthenticated(false);
-
       },
     };
   }, []);
