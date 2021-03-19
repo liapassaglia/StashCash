@@ -2,18 +2,18 @@ import React from 'react';
 import { AuthContext } from '../context';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 
-export const SigninScr = ({ navigation }) => {
+export const SignupScr = ({ navigation }) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const { signIn } = React.useContext(AuthContext);
-  
-  const onCreateAccountPress = () => {
-    navigation.navigate("Signup")
+  const { signUp } = React.useContext(AuthContext);
+
+  const onBackLoginPress = () => {
+    navigation.navigate('Signin');
   };
 
   return (
     <View style={styles.container}>
-      <Text>Sign In</Text>
+      <Text>Sign Up</Text>
       <TextInput
         style={{ width: 200, height: 40, borderWidth: 1, marginTop: 10 }}
         value={email}
@@ -38,13 +38,13 @@ export const SigninScr = ({ navigation }) => {
       />
 
       <Button
-        title="Sign In"
-        onPress={() => signIn(email, password)}
+        title="Signup"
+        onPress={() => signUp(email, password)}
         style={{ marginTop: 10 }}
       />
       <Button
-        title="Sign up"
-        onPress={onCreateAccountPress}
+        title="Back to Login"
+        onPress={onBackLoginPress}
         style={{ marginTop: 10 }}
       />
     </View>
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SigninScr;
+export default SignupScr;
