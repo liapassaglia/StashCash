@@ -9,20 +9,21 @@ import {
   TextInput,
 } from "react-native";
 
-export const SigninScr = ({ navigation }) => {
+export const SignupScr = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const { signIn } = React.useContext(AuthContext);
+  const { signUp } = React.useContext(AuthContext);
 
-  const onCreateAccountPress = () => {
-    navigation.navigate("Signup");
+  const onBackLoginPress = () => {
+    navigation.navigate("Signin");
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>Sign In</Text>
+      <Text style={styles.titleText}>Sign Up</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.labelText}>Email</Text>
+
         <TextInput
           style={styles.textInput}
           value={email}
@@ -34,8 +35,8 @@ export const SigninScr = ({ navigation }) => {
             setEmail(text);
           }}
         />
+        <Text style={styles.labelText}>Email</Text>
 
-        <Text style={styles.labelText}>Password</Text>
         <TextInput
           style={styles.textInput}
           value={password}
@@ -48,30 +49,34 @@ export const SigninScr = ({ navigation }) => {
           }}
         />
       </View>
-
       <View style={styles.buttonCountainer}>
         <TouchableOpacity
-          onPress={() => signIn(email, password)}
+          onPress={() => signUp(email, password)}
           style={styles.signinButton}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.signinText}>Sign In</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonCountainer}>
-        <TouchableOpacity
-          onPress={onCreateAccountPress}
-          style={styles.signupButton}
-          activeOpacity={0.8}
         >
           <Text style={styles.signupText}>Sign Up</Text>
         </TouchableOpacity>
+        <View style={styles.buttonCountainer}>
+          <TouchableOpacity
+            onPress={onBackLoginPress}
+            style={styles.signupButton}
+          >
+            <Text style={styles.signupText}>Back to login</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 16,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -148,4 +153,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SigninScr;
+export default SignupScr;

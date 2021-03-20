@@ -1,11 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { AuthContext } from '../context';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Button } from 'react-native';
+
 
 export default function DashboardScr({navigation}) {
+  const { signOut } = React.useContext(AuthContext);
+
+  const onBackLoginPress = () => {
+    navigation.navigate('Signin');
+  };
+
   return (
     <View style={styles.container}>
       <Text>Dashboard</Text>
+      <Button
+        title="Sign Out"
+        onPress={() => signOut()}
+      />
       <StatusBar style="auto" />
     </View>
   );
