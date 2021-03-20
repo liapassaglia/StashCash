@@ -1,14 +1,16 @@
 import React from "react";
-import 'react-native-gesture-handler'
+import "react-native-gesture-handler";
 import config from "./config/config"; // firebase key
 import firebase from "firebase";
 import { Alert, SafeAreaView } from "react-native";
-import { NavigationContainer, CreateAppContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  CreateAppContainer,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Provider as PaperProvider } from 'react-native-paper';
-import {SafeAreaView} from 'react-native';
-import {Appbar} from 'react-native-paper';
+import { Provider as PaperProvider } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 
 import SigninScr from "./screens/SigninScr";
 import SignupScr from "./screens/SignupScr";
@@ -23,16 +25,15 @@ const AuthStack = createStackNavigator();
 const AppStack = createBottomTabNavigator();
 const RootStack = createStackNavigator();
 
-function CustomeNavigationBar({navigation}){
-  return(
-    <Appbar.Header style={{backgroundColor:'black'}}>
-      <Appbar.Content title="Stash Cash"/>
+function CustomeNavigationBar({ navigation }) {
+  return (
+    <Appbar.Header style={{ backgroundColor: "black" }}>
+      <Appbar.Content title="Stash Cash" />
     </Appbar.Header>
   );
 }
 
 const AuthNavigation = () => {
-
   return (
     <AuthStack.Navigator headerMode="none">
       <AuthStack.Screen name="Signin" component={SigninScr} />
@@ -57,22 +58,26 @@ const AuthNavigation = () => {
 //         <AuthStack.Screen name='Signin' component={SigninScr}/>
 //       </AuthStack.Navigator>
 //   )
-}
+//}
 
 const AppNavigation = () => {
-  return(
-      <AppStack.Navigator
-        screenOptions={{
-          header: (props)=> <CustomeNavigationBar{...props}/>
-      }}>
-        <AppStack.Screen name='OverviewScr' component={OverviewScr}/>
-        <AppStack.Screen name='BudgetingScr' component={BudgetingScr}/>
-        <AppStack.Screen name='MoneyJarScr' component={MoneyJarScr} options={{title:'Money Jars'}}/>
-        <AppStack.Screen name='DashboardScr' component={DashboardScr}/>
-      </AppStack.Navigator>
-  )
-}
-
+  return (
+    <AppStack.Navigator
+      screenOptions={{
+        header: (props) => <CustomeNavigationBar {...props} />,
+      }}
+    >
+      <AppStack.Screen name="OverviewScr" component={OverviewScr} />
+      <AppStack.Screen name="BudgetingScr" component={BudgetingScr} />
+      <AppStack.Screen
+        name="MoneyJarScr"
+        component={MoneyJarScr}
+        options={{ title: "Money Jars" }}
+      />
+      <AppStack.Screen name="DashboardScr" component={DashboardScr} />
+    </AppStack.Navigator>
+  );
+};
 
 const RootNavigation = ({ isAuthenticated }) => (
   <RootStack.Navigator headerMode="none">
@@ -83,7 +88,6 @@ const RootNavigation = ({ isAuthenticated }) => (
     )}
   </RootStack.Navigator>
 );
-
 
 export default () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -97,9 +101,8 @@ export default () => {
     });
   }
 
-// export default function Main() {
-//   const [userToken, setUserToken] = React.useState(null);
-
+  // export default function Main() {
+  //   const [userToken, setUserToken] = React.useState(null);
 
   const authContext = React.useMemo(() => {
     return {
@@ -163,18 +166,18 @@ export default () => {
       },
     };
   }, []);
-//<<<<<<< auth
-//     <AuthContext.Provider value={authContext}>
-//       <NavigationContainer>
-//         <RootNavigation isAuthenticated={isAuthenticated} />
-//       </NavigationContainer>
-//     </AuthContext.Provider>
+  //<<<<<<< auth
+  //     <AuthContext.Provider value={authContext}>
+  //       <NavigationContainer>
+  //         <RootNavigation isAuthenticated={isAuthenticated} />
+  //       </NavigationContainer>
+  //     </AuthContext.Provider>
   return (
     <PaperProvider>
       <AuthContext.Provider value={authContext}>
-          <NavigationContainer>
-            <RootNavigation isAuthenticated={isAuthenticated} />
-          </NavigationContainer>
+        <NavigationContainer>
+          <RootNavigation isAuthenticated={isAuthenticated} />
+        </NavigationContainer>
       </AuthContext.Provider>
     </PaperProvider>
   );
