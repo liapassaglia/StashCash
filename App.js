@@ -12,6 +12,7 @@ import BudgetingScr from "./screens/BudgetingScr";
 import MoneyJarScr from "./screens/MoneyJarScr";
 import DashboardScr from "./screens/DashboardScr";
 import { AuthContext } from "./context";
+import { addNewUser } from "./util/firestoreMethods";
 const AuthStack = createStackNavigator();
 const AppStack = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -83,6 +84,12 @@ export default () => {
           .createUserWithEmailAndPassword(email, password)
           .then(
             () => {
+              // Add user to Firestore database
+              console.log(
+                "inside App.js, inside authContext signUp, printing firebase.auth().currentUser.uid",
+                firebase.auth().currentUser.uid
+              );
+              addNewUser(firebase.auth().currentUser.uid);
               // Should redirect to login (or login at once)
               Alert.alert(
                 "Account succesfully created!",
