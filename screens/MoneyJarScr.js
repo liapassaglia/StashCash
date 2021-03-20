@@ -1,21 +1,221 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Modal} from 'react-native';
+import { TextInput,Button } from 'react-native-paper';
+import MoneyJar from '../assets/components/MoneyJar';
 
-export default function MoneyJarScr({navigation}) {
+export default class MoneyJarScr extends React.Component{
+  constructor(props){
+    super(props);
+    this.jarsList = []
+    this.state = {
+      jars: [],
+      inputModalVisible: false,
+      label: '',
+      goal: '',
+    }
+  }
+  createJar = (label,goal) => {
+    const jar = {
+      label: this.state.label,
+      goal: this.state.goal,
+    }
+    this.jarsList.push(jar);
+    this.setState({jars: [...this.jarsList], inputModalVisible: false});
+    this.setState({label:'',goal:''})
+  }
+
+  componentDidMount() {
+    this.setState({ jars: [...this.jarsList]})
+  }
+
+  showModal = () => {
+    this.setState({
+        inputModalVisible: true,
+    });
+  }
+
+  setLabel= (label) => {
+    this.setState({
+        label: label,
+    })
+  }
+
+  setGoal= (goal) => {
+    this.setState({
+        goal: goal,
+    })
+  }
+
+  render(){
+  const {navigation} = this.props;
+  const {jars,inputModalVisible,label,goal} = this.state;
+  const renderItem = ({ item }) => {
+    return (
+      <MoneyJar label={item.label} goal={item.goal}/>
+    );
+  };
   return (
     <View style={styles.container}>
-      <Text>Money Jars</Text>
-      <StatusBar style="auto" />
+      <View style={styles.row}>
+        <Text style={styles.titleText}>Money Jars</Text>
+        <Button
+          mode="contained"
+          uppercase={false}
+          style={styles.createButton}
+          onPress={() => this.showModal()}
+        >
+          <Text>+ New Jar</Text>
+        </Button>
+      </View>
+      <View>
+          <FlatList
+            data={jars}
+            renderItem={renderItem}
+            keyExtractor={item => item.label}
+          />
+      </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={inputModalVisible}
+        onRequestClose={() => {
+        Alert.alert("Modal has been closed.");
+        this.setState({inputModalVisible: false});
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+             <Text style={styles.modalText}>Start a new jar!</Text>
+              <TextInput
+                label="Label"
+                value={label}
+                onChangeText={this.setLabel}
+                style={styles.inputBox}
+                theme={{colors: {primary: '#5B5B5B'}}}
+              />
+              <TextInput
+                label="Savings Goal"
+                value={goal}
+                onChangeText={this.setGoal}
+                style={styles.inputBox}
+                theme={{colors: {primary: '#5B5B5B'}}}
+              />
+              <Button
+                mode="contained"
+                uppercase={false}
+                style={styles.modalButton}
+                onPress={() => this.createJar()}
+              >
+                <Text style={styles.modalButtonText}>Create Jar</Text>
+              </Button>
+              <Button
+                mode="contained"
+                uppercase={false}
+                style={styles.modalButton}
+                onPress={() => this.setState({inputModalVisible: false})}
+              >
+                <Text style={styles.modalButtonText}>Cancel</Text>
+              </Button>
+            </View>
+          </View>
+       </Modal>
     </View>
   );
+  }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
+  row:{
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+    justifyContent: 'space-between'
+  },
+  img:{
+    width:200,
+    height:200,
+    justifyContent:"center",
+    alignItems:"center",
+  },
+  titleText:{
+    marginTop: 35,
+    marginLeft: 25,
+    fontSize: 30,
+    fontWeight: 'bold'
+  },
+  createButton:{
+    height:35,
+    width: 125,
+    backgroundColor: '#7AA47A',
+    fontSize: 20,
+    marginTop: 35,
+    marginRight: 25,
+  },
+  jar:{
+    justifyContent: 'center',
+    height: 250
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#7AA47A',
+    borderRadius: 20,
+    height: '60%',
+    width: '80%',
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 10,
+    margin: 5,
+    backgroundColor: '#ffffff',
+  },
+  buttonText: {
+      color: '#5B5B5B',
+      fontSize: 20,
+      textAlign: "center"
+  },
+  modalText: {
+      marginBottom: 20,
+      padding: 15,
+      fontSize: 30,
+      fontWeight: 'bold',
+      color: '#ffffff',
+      textAlign: "center"
+  },
+  inputBox:{
+      height: 45,
+      width: 250,
+      backgroundColor: '#ffffff',
+      marginBottom: 25,
+  },
+  modalButton:{
+      height:35,
+      width: 200,
+      backgroundColor: '#ffffff',
+      margin: 15,
+      fontSize: 20
+  },
+  modalButtonText: {
+      color: '#5B5B5B',
+      fontSize: 15,
+      textAlign: "center"
+  }
 });
