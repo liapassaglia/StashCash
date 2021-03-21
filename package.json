@@ -14,6 +14,7 @@
     "@react-navigation/stack": "^5.14.3",
     "expo": "~40.0.0",
     "expo-status-bar": "~1.0.3",
+    "firebase": "^8.3.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "^0.64.0",
@@ -22,10 +23,11 @@
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.2",
-    "react-native-sideswipe": "^1.5.0",
-    "react-native-snap-carousel": "^3.9.1",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12"
+    "react-navigation": "^4.4.4",
+    "react-navigation-drawer": "^2.7.0",
+    "react-navigation-stack": "^2.10.4",
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

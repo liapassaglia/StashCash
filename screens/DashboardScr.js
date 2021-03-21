@@ -375,7 +375,6 @@ export default class DashboardScr extends React.Component{
       </View>
     </ScrollView>
     </SafeAreaView>
-    
   );
   }
 }
