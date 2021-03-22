@@ -5,9 +5,11 @@ import {
   TouchableOpacity,
   Text,
   View,
-  Button,
-  TextInput,
+  Image
 } from "react-native";
+import logo from '../assets/images/StashCash.png';
+import { TextInput,Button } from 'react-native-paper';
+
 
 export const SigninScr = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
@@ -20,53 +22,47 @@ export const SigninScr = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View>
+        <Image source={logo} style={{width:200,height:200}}/>
+      </View>
       <Text style={styles.titleText}>Sign In</Text>
       <View style={styles.inputContainer}>
-        <Text style={styles.labelText}>Email</Text>
         <TextInput
-          style={styles.textInput}
+          label="Email"
           value={email}
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
+          onChangeText={(email)=>{setEmail(email)}}
+          style={styles.inputBox}
           autoCorrect={false}
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
+          autoCapitalize="none"
+          theme={{colors: {primary: '#5B5B5B'}}}
         />
-
-        <Text style={styles.labelText}>Password</Text>
         <TextInput
-          style={styles.textInput}
+          label="Password"
           value={password}
-          placeholder="Password"
+          onChangeText={(password)=>{setPassword(password)}}
+          style={styles.inputBox}
+          autoCorrect={false}
           secureTextEntry={true}
           autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={(text) => {
-            setPassword(text);
-          }}
+          theme={{colors: {primary: '#5B5B5B'}}}
         />
       </View>
-
-      <View style={styles.buttonCountainer}>
-        <TouchableOpacity
-          onPress={() => signIn(email, password)}
-          style={styles.signinButton}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.signinText}>Sign In</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonCountainer}>
-        <TouchableOpacity
-          onPress={onCreateAccountPress}
-          style={styles.signupButton}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.signupText}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
+      <Button
+        mode="contained"
+        uppercase={false}
+        style={styles.button}
+        onPress={() => signIn(email, password)}
+      >
+        <Text style={{fontSize:20}}>Sign In</Text>
+      </Button>
+      <Button
+        mode="contained"
+        uppercase={false}
+        style={styles.button}
+        onPress={() => onCreateAccountPress()}
+      >
+        <Text style={{fontSize:20}}>Sign Up</Text>
+      </Button>
     </View>
   );
 };
@@ -74,38 +70,34 @@ export const SigninScr = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#D0E2D0',
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
   },
-  buttonCountainer: {
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 7,
+  button: {
+    height:45,
+    width: 200,
+    backgroundColor: '#4B674C',
+    fontSize: 20,
+    alignSelf: 'center',
+    marginTop:20,
+    marginBottom:5,
+    borderColor:'white',
+    borderWidth:1,
   },
   inputContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fafafa',
     padding: 15,
+    marginTop:25,
   },
-  textInput: {
-    fontSize: 15,
+  inputBox:{
+    height: 50,
     width: 300,
-    height: 60,
-    borderWidth: 1,
-    marginTop: 10,
-    padding: 10,
-    borderRadius: 10,
-  },
-  signinButton: {
-    elevation: 10,
-    backgroundColor: "#009688",
-    borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    width: 300,
-    height: 60,
+    backgroundColor: '#fafafa',
+    marginBottom: 25,
+    alignSelf: 'center',
+    fontSize: 20,
   },
   signinText: {
     fontSize: 18,
@@ -113,15 +105,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase",
-  },
-  signupButton: {
-    elevation: 10,
-    backgroundColor: "#aeafb0",
-    borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    width: 300,
-    height: 60,
   },
   signupText: {
     fontSize: 18,
@@ -144,7 +127,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     //textTransform: "uppercase",
-    paddingVertical: 1,
+    paddingTop: 25
   },
 });
 

@@ -5,9 +5,8 @@ import {
   TouchableOpacity,
   Text,
   View,
-  Button,
-  TextInput,
 } from "react-native";
+import {TextInput,Button} from 'react-native-paper';
 
 export const SignupScr = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
@@ -22,49 +21,43 @@ export const SignupScr = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.titleText}>Sign Up</Text>
       <View style={styles.inputContainer}>
-        <Text style={styles.labelText}>Email</Text>
-
         <TextInput
-          style={styles.textInput}
+          label="Email"
           value={email}
-          placeholder="Email"
+          onChangeText={(email)=>{setEmail(email)}}
+          style={styles.inputBox}
+          autoCorrect={false}
           keyboardType="email-address"
           autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
+          theme={{colors: {primary: '#5B5B5B'}}}
         />
-        <Text style={styles.labelText}>Email</Text>
-
         <TextInput
-          style={styles.textInput}
+          label="Password"
           value={password}
-          placeholder="Password"
+          onChangeText={(password)=>{setPassword(password)}}
           secureTextEntry={true}
-          autoCapitalize="none"
+          style={styles.inputBox}
           autoCorrect={false}
-          onChangeText={(text) => {
-            setPassword(text);
-          }}
+          autoCapitalize="none"
+          theme={{colors: {primary: '#5B5B5B'}}}
         />
       </View>
-      <View style={styles.buttonCountainer}>
-        <TouchableOpacity
-          onPress={() => signUp(email, password)}
-          style={styles.signinButton}
-        >
-          <Text style={styles.signupText}>Sign Up</Text>
-        </TouchableOpacity>
-        <View style={styles.buttonCountainer}>
-          <TouchableOpacity
-            onPress={onBackLoginPress}
-            style={styles.signupButton}
-          >
-            <Text style={styles.signupText}>Back to login</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Button
+        mode="contained"
+        uppercase={false}
+        style={styles.button}
+        onPress={() => signUp(email, password)}
+      >
+        <Text style={{fontSize:20}}>Sign Up</Text>
+      </Button>
+      <Button
+        mode="contained"
+        uppercase={false}
+        style={styles.button}
+        onPress={() => onBackLoginPress()}
+      >
+        <Text style={{fontSize:20}}>Back to login</Text>
+      </Button>
     </View>
   );
 };
@@ -72,26 +65,19 @@ export const SignupScr = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor:'#D0E2D0',
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
   },
   buttonCountainer: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fafafa',
     alignItems: "center",
     justifyContent: "center",
     padding: 7,
   },
   inputContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fafafa',
     padding: 15,
   },
   textInput: {
@@ -103,37 +89,24 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
-  signinButton: {
-    elevation: 10,
-    backgroundColor: "#009688",
-    borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+  inputBox:{
+    height: 50,
     width: 300,
-    height: 60,
+    backgroundColor: '#ffffff',
+    marginBottom: 25,
+    alignSelf: 'center',
+    fontSize: 20,
   },
-  signinText: {
-    fontSize: 18,
-    color: "#fff",
-    fontWeight: "bold",
-    alignSelf: "center",
-    textTransform: "uppercase",
-  },
-  signupButton: {
-    elevation: 10,
-    backgroundColor: "#aeafb0",
-    borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    width: 300,
-    height: 60,
-  },
-  signupText: {
-    fontSize: 18,
-    color: "black",
-    fontWeight: "bold",
-    alignSelf: "center",
-    textTransform: "uppercase",
+  button: {
+    height:45,
+    width: 200,
+    backgroundColor: '#4B674C',
+    fontSize: 20,
+    alignSelf: 'center',
+    marginTop:20,
+    marginBottom:5,
+    borderColor:'white',
+    borderWidth:1,
   },
   labelText: {
     fontSize: 15,
@@ -149,7 +122,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     //textTransform: "uppercase",
-    paddingVertical: 1,
+    paddingVertical: 20,
   },
 });
 
