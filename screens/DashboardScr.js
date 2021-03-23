@@ -27,7 +27,9 @@ import {
   addClaimedReward,
   editBudgetStatistics,
   getClaimedRewards,
+  changeEmail,
 } from "../util/firestoreMethods";
+import { firestore, auth } from "../config/firebase";
 
 const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");
@@ -85,9 +87,11 @@ export default class DashboardScr extends React.Component {
       rewards: [],
       points: 0,
       streak: 0,
-      username: "tim@gmail.com",
-      password: "abcabc",
+      username: auth.currentUser.email,
+      password: "******",
       initialLoad: true,
+      changePassword: false,
+      changeUsername: false,
     };
     //preserve inital states
     //this.baseState = this.state;

@@ -319,3 +319,47 @@ export function addSpendingCategory(uid, newSpendingCatInfo) {
     );
   }
 }
+const rauthenticate = (currentPassword) => {
+  let user = auth.currentUser;
+  let cred = firebase.auth.EmailAuthProvider.credential(
+    user.email,
+    currentPassword
+  );
+
+  return user.reauthenticateWithCredential(cred);
+};
+export function changeEmail(currentPassword, newEmail) {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
+    rauthenticate(currentPassword)
+      .then(() => {
+        let user = auth.currentUser;
+        user
+          .updateEmail(newEmail)
+          .then(() => {
+            console.log("inside changeEmail(), email successfully updated!!");
+          })
+          .catch((error) => {
+            console.log("error inside changEmail, printing ", error);
+          });
+      })
+      .catch((error) => {
+        console.log("error inside changEmail, printing ", error);
+      });
+  } catch (err) {
+    console.log("inside firestoreMethods error");
+    Alert.alert("Error occured when resetting email!", err.message);
+  }
+}
+
+export function changePassword(currentPassword, newPassword) {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+  } catch (err) {
+    console.log("inside firestoreMethods error");
+    Alert.alert("Error occured when resetting password!", err.message);
+  }
+}

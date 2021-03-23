@@ -11,7 +11,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Appbar } from "react-native-paper";
-import Icon from 'react-native-vector-icons/Ionicons'; 
+import Icon from "react-native-vector-icons/Ionicons";
 
 import SigninScr from "./screens/SigninScr";
 import SignupScr from "./screens/SignupScr";
@@ -60,6 +60,8 @@ const AuthNavigation = () => {
 //       </AuthStack.Navigator>
 //   )
 //}
+// bad practice probably
+let userCredentials = { email: "", password: "" };
 
 const AppNavigation = () => {
   return (
@@ -68,45 +70,50 @@ const AppNavigation = () => {
         header: (props) => <CustomeNavigationBar {...props} />,
       }}
       tabBarOptions={{
-        activeTintColor: '#4B674C',
+        activeTintColor: "#4B674C",
         height: 60,
       }}
     >
-      <AppStack.Screen 
-      name="OverviewScr" 
-      component={OverviewScr} 
-      options={{
-        title:'Overview',
-        tabBarIcon: ({ color, size }) => (
-          <Icon name="pie-chart" color={color} size={size} />
-      )}}
+      <AppStack.Screen
+        name="OverviewScr"
+        component={OverviewScr}
+        options={{
+          title: "Overview",
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="pie-chart" color={color} size={size} />
+          ),
+        }}
       />
-      <AppStack.Screen 
-      name="BudgetingScr" 
-      component={BudgetingScr} 
-      options={{
-        title:'Budgeting',
-        tabBarIcon: ({ color, size }) => (
-          <Icon name="create" color={color} size={size} />
-      )}}
+      <AppStack.Screen
+        name="BudgetingScr"
+        component={BudgetingScr}
+        options={{
+          title: "Budgeting",
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="create" color={color} size={size} />
+          ),
+        }}
       />
       <AppStack.Screen
         name="MoneyJarScr"
         component={MoneyJarScr}
-        options={{ 
-          title: "Money Jars", 
+        options={{
+          title: "Money Jars",
           tabBarIcon: ({ color, size }) => (
             <Icon name="logo-usd" color={color} size={size} />
-        )}}
+          ),
+        }}
       />
-      <AppStack.Screen 
-      name="DashboardScr" 
-      component={DashboardScr} 
-      options={{ 
-        title: "User Dashboard",
-        tabBarIcon: ({ color, size }) => (
-          <Icon name="person-circle" color={color} size={size} />
-      )}}
+      <AppStack.Screen
+        name="DashboardScr"
+        component={DashboardScr}
+        options={{
+          title: "User Dashboard",
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="person-circle" color={color} size={size} />
+          ),
+          userCredentials: userCredentials,
+        }}
       />
     </AppStack.Navigator>
   );
@@ -134,18 +141,19 @@ export default () => {
     });
   }
 
-  // export default function Main() {
-  //   const [userToken, setUserToken] = React.useState(null);
-
   const authContext = React.useMemo(() => {
     return {
       signIn: (email, password) => {
+        userCredentials.email = email;
+        userCredentials.password = password;
+        console.log("printing userCredentials: ", userCredentials);
         firebase
           .auth()
           .signInWithEmailAndPassword(email, password)
           .then(
             () => {
               //console.log(firebase.auth().currentUser); // Prints logged user
+
               setIsAuthenticated(true);
               console.log("Login successful!");
             },
@@ -157,6 +165,9 @@ export default () => {
           );
       },
       signUp: (email, password) => {
+        userCredentials.email = email;
+        userCredentials.password = password;
+
         firebase
           .auth()
           .createUserWithEmailAndPassword(email, password)
@@ -164,6 +175,7 @@ export default () => {
             () => {
               // Add user to Firestore database
               addNewUser(firebase.auth().currentUser.uid);
+
               // Should redirect to login (or login at once)
               Alert.alert(
                 "Account succesfully created!",
@@ -184,6 +196,8 @@ export default () => {
           .signOut()
           .then(
             () => {
+              userCredentials.email = "";
+              userCredentials.password = "";
               Alert.alert("Signed out"); // does not work
               console.log("Signed out");
             },
