@@ -70,15 +70,20 @@ export async function getBudgetStats() {
     Alert.alert("Error in getting budget stats!", err.message);
   }
 }
-export function editBudgetStatistics(uid, newStats) {
+
+export function editBudgetStatistics(newStats) {
   try {
-    const db = firebase.firestore();
-    // Create budget-statistics collection ref
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
     let budgetStatsCollectionRef = db
       .collection("users")
       .doc(uid)
       .collection("budget-statistics");
-
+    console.log(
+      "inside editBudgetStatistics(), printing newStats params:",
+      newStats
+    );
     if (newStats.type == "points") {
       budgetStatsCollectionRef
         .doc("points")
@@ -98,8 +103,11 @@ export function editBudgetStatistics(uid, newStats) {
   }
 }
 
-export function addClaimedReward(uid, rewardInfo) {
+export function addClaimedReward(rewardInfo) {
   try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
     // Create claimed-rewards collection
     let claimedRewardsCollectionRef = db
       .collection("users")
@@ -108,7 +116,9 @@ export function addClaimedReward(uid, rewardInfo) {
 
     claimedRewardsCollectionRef.doc(rewardInfo.name).set({
       name: rewardInfo.name,
-      requiredPoints: rewardInfo.requiredPoints,
+      points: rewardInfo.points,
+      description: rewardInfo.description,
+      url: rewardInfo.url,
     });
 
     // TODO: decrement currentPoints from budgetStatsCollection
@@ -122,6 +132,33 @@ export function addClaimedReward(uid, rewardInfo) {
   }
 }
 
+export async function getClaimedRewards() {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
+    let claimedRewardsArray = [];
+    let claimedRewardsCollectionRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("claimed-rewards");
+
+    await claimedRewardsCollectionRef.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        claimedRewardsArray.push(doc.data());
+      });
+    });
+
+    return claimedRewardsArray;
+  } catch (err) {
+    console.log(
+      "Inside firestoreMethods.js, printing error!",
+      err,
+      err.message
+    );
+    Alert.alert("Error occured when getting claimed rewards!", err.message);
+  }
+}
 export function addNewJar(newJarInfo) {
   try {
     const db = firestore;
