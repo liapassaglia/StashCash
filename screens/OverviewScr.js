@@ -29,35 +29,35 @@ export default class DashboardScr extends React.Component{
       {
         name: "Coffee",
         population: 6,
-        color: "#46A84A",
+        color: "#EB9341",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
       {
         name: "Going Out",
         population: 30,
-        color: "#74D795",
+        color: "#39A5D6",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
       {
         name: "Gas",
         population: 15,
-        color: "#24C545",
+        color: "#5CBD61",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
       {
         name: "Eating Out",
         population: 10,
-        color: "#819C71",
+        color: "#F0EC2F",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
       {
         name: "Remaining",
         population: 34,
-        color: "#D0D0D0",
+        color: "#435FBB",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
