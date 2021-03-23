@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from 'react';
+import firebase from 'firebase';
 import {
   SafeAreaView,
   Dimensions,
@@ -8,7 +9,7 @@ import {
   View,
   Image,
   Modal,
-} from "react-native";
+} from 'react-native';
 import {
   List,
   Button,
@@ -18,8 +19,8 @@ import {
   Paragraph,
   IconButton,
   TextInput,
-} from "react-native-paper";
-import QRCode from "../assets/images/QR.png";
+} from 'react-native-paper';
+import QRCode from '../assets/images/QR.png';
 import {
   getNotificationSettings,
   editNotificationSettings,
@@ -28,45 +29,47 @@ import {
   editBudgetStatistics,
   getClaimedRewards,
   changeEmail,
-} from "../util/firestoreMethods";
-import { firestore, auth } from "../config/firebase";
+  editPassword,
+  editEmail
+} from '../util/firestoreMethods';
+import { firestore, auth } from '../config/firebase';
 
-const { width } = Dimensions.get("window");
-const { height } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 const allRewards = [
   {
-    name: "Halo Donuts",
-    description: "Free donut",
+    name: 'Halo Donuts',
+    description: 'Free donut',
     url:
-      "https://static1.squarespace.com/static/5d890dc76001c32118d9c7f7/t/5e0143ae9bb1cd38ee77d5b1/1613515544775/?format=1500w",
+      'https://static1.squarespace.com/static/5d890dc76001c32118d9c7f7/t/5e0143ae9bb1cd38ee77d5b1/1613515544775/?format=1500w',
     points: 120,
   },
   {
-    name: "Sweetberries",
-    description: "Free medium create your own icecream",
+    name: 'Sweetberries',
+    description: 'Free medium create your own icecream',
     url:
-      "https://sweetberries.com/wp-content/uploads/2010/08/logo_oval2_big.png",
+      'https://sweetberries.com/wp-content/uploads/2010/08/logo_oval2_big.png',
     points: 180,
   },
   {
-    name: "Social Restaurant",
-    description: "$5 off your meal",
-    url: "http://thesocialgnv.com/wp-content/uploads/2016/10/logo.png",
+    name: 'Social Restaurant',
+    description: '$5 off your meal',
+    url: 'http://thesocialgnv.com/wp-content/uploads/2016/10/logo.png',
     points: 140,
   },
   {
-    name: "Salty Dog",
-    description: "Free pint of our Dog Water beer",
+    name: 'Salty Dog',
+    description: 'Free pint of our Dog Water beer',
     url:
-      "https://lh3.googleusercontent.com/fNlfR27CeNWPi8gHTZduTj4dU-z-HjEyEZISe2vvoAwHe1BRpKekcxSh2MDbj5pH97QRarWlFKxndgRXCaqoXfS_kwVasFAapjMfOuZy=s340",
+      'https://lh3.googleusercontent.com/fNlfR27CeNWPi8gHTZduTj4dU-z-HjEyEZISe2vvoAwHe1BRpKekcxSh2MDbj5pH97QRarWlFKxndgRXCaqoXfS_kwVasFAapjMfOuZy=s340',
     points: 200,
   },
   {
-    name: "Opus Coffee",
-    description: "One free medium iced coffee",
+    name: 'Opus Coffee',
+    description: 'One free medium iced coffee',
     url:
-      "https://static1.squarespace.com/static/55f862a7e4b09ee1e2fc39c4/t/57fb8461c534a5767ea97af7/1614283302053/",
+      'https://static1.squarespace.com/static/55f862a7e4b09ee1e2fc39c4/t/57fb8461c534a5767ea97af7/1614283302053/',
     points: 100,
   },
 ];
@@ -88,7 +91,7 @@ export default class DashboardScr extends React.Component {
       points: 0,
       streak: 0,
       username: auth.currentUser.email,
-      password: "******",
+      password: 'dummyPwd',
       initialLoad: true,
       changePassword: false,
       changeUsername: false,
@@ -173,7 +176,7 @@ export default class DashboardScr extends React.Component {
 
     // update the user's points in firestore
     editBudgetStatistics({
-      type: "points",
+      type: 'points',
       currentPoints: this.state.points - image.points,
     });
   };
@@ -195,6 +198,13 @@ export default class DashboardScr extends React.Component {
       weeklyFrequency: this.state.weeklySwitch,
       monthlyFrequency: this.state.monthlySwitch,
     });
+
+    if (this.state.password !== 'dummyPwd') {
+      editPassword(this.state.password);
+    }
+    //editEmail(this.state.username)
+    
+
     this.baseState = this.state;
     this.setState({ settingsModalVisible: false });
   };
@@ -272,7 +282,7 @@ export default class DashboardScr extends React.Component {
               <Text style={styles.titleText}>User Dashboard</Text>
               <IconButton
                 icon="cog"
-                color={"#ffffff"}
+                color={'#ffffff'}
                 size={35}
                 style={{ marginTop: 15 }}
                 onPress={() => this.showSettingsModal()}
@@ -311,7 +321,7 @@ export default class DashboardScr extends React.Component {
                   {rewards.map((image, index) => (
                     <Card style={styles.card}>
                       <Card.Content style={styles.cardContent}>
-                        <View style={{ width: "50%" }}>
+                        <View style={{ width: '50%' }}>
                           <Title style={{ fontSize: 25 }}>{image.name}</Title>
                           <Paragraph style={{ fontSize: 17 }}>
                             {image.description}
@@ -328,7 +338,7 @@ export default class DashboardScr extends React.Component {
                           </Button>
                           <Image
                             style={{
-                              alignSelf: "center",
+                              alignSelf: 'center',
                               height: 50,
                               width: 50,
                               borderWidth: 1,
@@ -344,11 +354,11 @@ export default class DashboardScr extends React.Component {
                 </ScrollView>
               ) : (
                 <View style={{ margin: 20 }}>
-                  <Text style={{ alignSelf: "center", fontSize: 20 }}>
+                  <Text style={{ alignSelf: 'center', fontSize: 20 }}>
                     You haven't claimed any rewards yet
                   </Text>
                   <Text
-                    style={{ alignSelf: "center", fontSize: 20, marginTop: 10 }}
+                    style={{ alignSelf: 'center', fontSize: 20, marginTop: 10 }}
                   >
                     Hit budget goals, earn points, get rewards!
                   </Text>
@@ -360,7 +370,7 @@ export default class DashboardScr extends React.Component {
               transparent={true}
               visible={userRewardsModalVisible}
               onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
+                Alert.alert('Modal has been closed.');
                 this.setState({ userRewardsModalVisible: false });
               }}
             >
@@ -379,7 +389,7 @@ export default class DashboardScr extends React.Component {
                       {allRewards.map((image, index) => (
                         <Card style={styles.cardModal}>
                           <Card.Content style={styles.cardContent}>
-                            <View style={{ width: "60%" }}>
+                            <View style={{ width: '60%' }}>
                               <Title style={{ fontSize: 25 }}>
                                 {image.name}
                               </Title>
@@ -403,13 +413,13 @@ export default class DashboardScr extends React.Component {
                                   uppercase={false}
                                   style={[
                                     styles.cardButtonModal,
-                                    { backgroundColor: "#F9F9F9" },
+                                    { backgroundColor: '#F9F9F9' },
                                   ]}
                                 ></Button>
                               )}
                               <Image
                                 style={{
-                                  alignSelf: "center",
+                                  alignSelf: 'center',
                                   height: 50,
                                   width: 50,
                                   borderWidth: 1,
@@ -434,7 +444,7 @@ export default class DashboardScr extends React.Component {
                               fontSize: 20,
                               marginTop: 10,
                               marginLeft: 20,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {image.points}
@@ -461,26 +471,26 @@ export default class DashboardScr extends React.Component {
               transparent={true}
               visible={settingsModalVisible}
               onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
+                Alert.alert('Modal has been closed.');
                 this.setState({ settingsModalVisible: false });
               }}
             >
               <View style={styles.centeredView}>
-                <View style={[styles.modalView, { height: "80%" }]}>
+                <View style={[styles.modalView, { height: '80%' }]}>
                   <Text style={styles.modalText}>Manage Settings</Text>
                   <View
                     style={{
                       paddingTop: 10,
-                      width: "95%",
-                      backgroundColor: "white",
+                      width: '95%',
+                      backgroundColor: 'white',
                     }}
                   >
                     <Paragraph
                       style={{
-                        color: "#4B674C",
+                        color: '#4B674C',
                         fontSize: 20,
                         marginLeft: 15,
-                        fontWeight: "bold",
+                        fontWeight: 'bold',
                       }}
                     >
                       Account Info
@@ -490,21 +500,24 @@ export default class DashboardScr extends React.Component {
                       value={username}
                       onChangeText={this.setUsername}
                       style={styles.inputBox}
-                      theme={{ colors: { primary: "#5B5B5B" } }}
+                      theme={{ colors: { primary: '#5B5B5B' } }}
                     />
                     <TextInput
                       label="Password"
                       value={password}
                       onChangeText={this.setPassword}
                       style={styles.inputBox}
-                      theme={{ colors: { primary: "#5B5B5B" } }}
+                      autoCorrect={false}
+                      secureTextEntry={true}
+                      autoCapitalize="none"
+                      theme={{ colors: { primary: '#5B5B5B' } }}
                     />
                     <Paragraph
                       style={{
-                        color: "#4B674C",
+                        color: '#4B674C',
                         fontSize: 20,
                         marginLeft: 15,
-                        fontWeight: "bold",
+                        fontWeight: 'bold',
                       }}
                     >
                       Notifications
@@ -513,48 +526,48 @@ export default class DashboardScr extends React.Component {
                       <List.Item
                         title="Daily"
                         titleStyle={{ fontSize: 17 }}
-                        style={{ backgroundColor: "#ffffff" }}
+                        style={{ backgroundColor: '#ffffff' }}
                         right={(props) => (
                           <Switch
                             value={dailySwitch}
                             onValueChange={this.toggleDaily}
-                            color={"#4B674C"}
+                            color={'#4B674C'}
                           />
                         )}
                       />
                       <List.Item
                         title="Weekly"
                         titleStyle={{ fontSize: 17 }}
-                        style={{ backgroundColor: "#ffffff" }}
+                        style={{ backgroundColor: '#ffffff' }}
                         right={(props) => (
                           <Switch
                             value={weeklySwitch}
                             onValueChange={this.toggleWeekly}
-                            color={"#4B674C"}
+                            color={'#4B674C'}
                           />
                         )}
                       />
                       <List.Item
                         title="Monthly"
                         titleStyle={{ fontSize: 17 }}
-                        style={{ backgroundColor: "#ffffff" }}
+                        style={{ backgroundColor: '#ffffff' }}
                         right={(props) => (
                           <Switch
                             value={monthlySwitch}
                             onValueChange={this.toggleMonthly}
-                            color={"#4B674C"}
+                            color={'#4B674C'}
                           />
                         )}
                       />
                     </List.Section>
                   </View>
-                  <View style={{ flexDirection: "row" }}>
+                  <View style={{ flexDirection: 'row' }}>
                     <Button
                       mode="contained"
                       uppercase={false}
                       style={[
                         styles.modalButton,
-                        { width: "40%", marginLeft: 50, marginRight: 20 },
+                        { width: '40%', marginLeft: 50, marginRight: 20 },
                       ]}
                       onPress={() =>
                         this.setState(() => this.onSubmitSettings())
@@ -567,7 +580,7 @@ export default class DashboardScr extends React.Component {
                       uppercase={false}
                       style={[
                         styles.modalButton,
-                        { width: "40%", marginRight: 50, marginLeft: 20 },
+                        { width: '40%', marginRight: 50, marginLeft: 20 },
                       ]}
                       onPress={() => this.onCancel()}
                     >
@@ -582,7 +595,7 @@ export default class DashboardScr extends React.Component {
               transparent={true}
               visible={QRModalVisible}
               onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
+                Alert.alert('Modal has been closed.');
                 this.setState({ QRModalVisible: false });
               }}
             >
@@ -593,7 +606,7 @@ export default class DashboardScr extends React.Component {
                   <Text
                     style={[
                       styles.modalText,
-                      { fontSize: 20, fontWeight: "normal" },
+                      { fontSize: 20, fontWeight: 'normal' },
                     ]}
                   >
                     Or Use Pin: AX7D32Q
@@ -622,70 +635,70 @@ const styles = StyleSheet.create({
   },
   dashboardView: {
     flexGrow: 1,
-    justifyContent: "space-between",
-    backgroundColor: "#D0E2D0",
+    justifyContent: 'space-between',
+    backgroundColor: '#D0E2D0',
   },
   row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-end",
-    justifyContent: "space-between",
-    backgroundColor: "#4B674C",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    backgroundColor: '#4B674C',
     paddingBottom: 10,
   },
   titleText: {
     marginTop: 35,
     fontSize: 30,
     marginLeft: 10,
-    color: "#ffffff",
+    color: '#ffffff',
   },
   settingsButton: {
     height: 35,
     width: 125,
-    backgroundColor: "#D0E2D0",
+    backgroundColor: '#D0E2D0',
     fontSize: 20,
     marginTop: 20,
-    borderColor: "#FFFFFF",
+    borderColor: '#FFFFFF',
     borderWidth: 1,
     marginRight: 10,
   },
   streak: {
     padding: 20,
-    justifyContent: "center",
-    flexDirection: "row",
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   streakText: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   points: {
     marginLeft: 25,
     marginRight: 25,
     padding: 20,
-    justifyContent: "center",
-    backgroundColor: "#F9F9F9",
+    justifyContent: 'center',
+    backgroundColor: '#F9F9F9',
   },
   pointText: {
-    alignSelf: "center",
+    alignSelf: 'center',
     fontSize: 20,
   },
   pointNumber: {
-    alignSelf: "center",
+    alignSelf: 'center',
     fontSize: 30,
     marginTop: 10,
   },
   userRewardsButton: {
     height: 35,
     width: 200,
-    backgroundColor: "#9FB48F",
+    backgroundColor: '#9FB48F',
     fontSize: 20,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginTop: 20,
     marginBottom: 20,
   },
   userRewards: {
     padding: 20,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   userRewardsText: {
     marginLeft: 16,
@@ -694,19 +707,19 @@ const styles = StyleSheet.create({
   card: {
     height: 150,
     width: 355,
-    backgroundColor: "#F9F9F9",
+    backgroundColor: '#F9F9F9',
   },
   cardContent: {
-    justifyContent: "center",
-    flexDirection: "row",
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   cardImageView: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
   },
   cardButton: {
     height: 35,
     width: 125,
-    backgroundColor: "#9FB48F",
+    backgroundColor: '#9FB48F',
     fontSize: 20,
     marginLeft: 20,
     marginBottom: 20,
@@ -714,23 +727,23 @@ const styles = StyleSheet.create({
   swiperTitle: {
     fontSize: 20,
     marginBottom: 10,
-    fontWeight: "bold",
-    alignSelf: "center",
+    fontWeight: 'bold',
+    alignSelf: 'center',
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "#7AA47A",
+    backgroundColor: '#7AA47A',
     borderRadius: 20,
-    height: "60%",
-    width: "90%",
-    alignItems: "center",
-    shadowColor: "#000",
+    height: '60%',
+    width: '90%',
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -742,31 +755,31 @@ const styles = StyleSheet.create({
   modalText: {
     padding: 15,
     fontSize: 30,
-    fontWeight: "bold",
-    color: "#ffffff",
-    textAlign: "center",
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
   },
   modalButton: {
     height: 35,
     width: 200,
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
     margin: 30,
     fontSize: 20,
   },
   modalButtonText: {
-    color: "#5B5B5B",
+    color: '#5B5B5B',
     fontSize: 15,
-    textAlign: "center",
+    textAlign: 'center',
   },
   cardModal: {
     height: 600,
     width: 300,
-    backgroundColor: "#F9F9F9",
+    backgroundColor: '#F9F9F9',
   },
   cardButtonModal: {
     height: 35,
     width: 75,
-    backgroundColor: "#9FB48F",
+    backgroundColor: '#9FB48F',
     fontSize: 20,
     marginLeft: 20,
     marginBottom: 20,
@@ -774,9 +787,9 @@ const styles = StyleSheet.create({
   inputBox: {
     height: 50,
     width: 250,
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
     marginBottom: 25,
-    alignSelf: "center",
+    alignSelf: 'center',
     fontSize: 20,
   },
 });
