@@ -92,6 +92,9 @@ export default class DashboardScr extends React.Component{
         screenHeight: 0,
         currentIndex: 0,
         data: [],
+        inputModalVisible: false,
+        category: '',
+        amount: '',
     }
     //preserve inital states
     this.baseState = this.state
@@ -113,8 +116,26 @@ export default class DashboardScr extends React.Component{
     this.setState({value: value});
   }
 
+  showModal = () => {
+    this.setState({
+      inputModalVisible: true,
+    });
+  }
+
+  setCategory = (category) => {
+    this.setState({
+      category: category,
+    })
+  }
+
+  setAmount = (amount) => {
+    this.setState({
+      amount: amount,
+    })
+  }
+
   render(){
-  const {data,value} = this.state;
+  const {inputModalVisible,category,amount} = this.state;
   const scrollEnabled = this.state.screenHeight > height;
  
   return (
@@ -134,6 +155,7 @@ export default class DashboardScr extends React.Component{
             color={'#ffffff'}
             size={40}
             style={{marginTop: 10}}
+            onPress={()=>this.showModal()}
           />
         </View>
         <View style={styles.weeklyOverview}>
@@ -162,99 +184,100 @@ export default class DashboardScr extends React.Component{
           />
         </View>
         <Text style={{alignSelf:'center',fontSize:25,margin:10}}>Categories</Text>
-        <View style={styles.category}>
-
-
-        <View style={{width, height:200, marginLeft:75}}>
+        <View style={{width, height:200, marginRight:10, marginLeft:10}}>
                   <ScrollView
-                    pagingEnabled horizontal style={styles.category} centerContent
+                    pagingEnabled horizontal style={{width:355,height}} centerContent
                   >
                     {
-                      dataCategories.map((image,index)=>(
-                        <Card style={styles.cardModal}>
+                      this.dataCategories.map((image,index)=>(
+                        <Card style={styles.card}>
                           <Card.Content style={styles.cardContent}>
-                            <View style={{width:'60%'}}>
-                              <Title style={{fontSize:25}}>{image.name}</Title>
-                              <Paragraph style={{fontSize:17}}>{image.description}</Paragraph> 
+                            <Text style={{alignSelf:'center',fontSize:25,marginTop:20}}>{image.category}</Text>
+                            <View style={{flexDirection:'row'}}>
+                            <ProgressChart
+                              data={[image.spent/100]}
+                              width={Dimensions.get('window').width/2}
+                              height={125}
+                              strokeWidth={16}
+                              radius={30}
+                              chartConfig={{
+                                backgroundColor: '#F9F9F9',
+                                backgroundGradientFrom: '#F9F9F9',
+                                backgroundGradientTo: '#F9F9F9',
+                                decimalPlaces: 2,
+                                color: (opacity = 1) => `rgba(70, 168, 74, ${opacity})`,
+                              }}
+                              hideLegend={true}
+                              accessor={"population"}
+                              style={{
+                                borderRadius: 16,
+                                alignSelf:'center',
+                              }}
+                            />
+                            <View style={{marginTop:20,marginLeft:-20}}>
+                              <Text style={{fontSize:17,margin:5,fontWeight:'bold',alignSelf:'center'}}>
+                                Remaining: ${image.remaining}
+                              </Text>
+                              <Text style={{fontSize:17,margin:5,alignSelf:'center'}}>
+                                Total Spent: ${image.spent}
+                              </Text>
+                              <Text style={{fontSize:17,margin:5,alignSelf:'center'}}>
+                                Budget Alloted: ${image.alloted}
+                              </Text>
                             </View>
-                            <View style={styles.cardImageView}>
-                            {points >= image.points ?
-                              <Button
-                                mode="contained"
-                                uppercase={false}
-                                style={styles.cardButtonModal}
-                                onPress={() => this.claimReward(image)}
-                              >
-                                <Text>Claim</Text>
-                              </Button>
-                              :
-                              <Button
-                                mode="contained"
-                                uppercase={false}
-                                style={[styles.cardButtonModal,{backgroundColor: '#F9F9F9'}]}
-                              >
-                              </Button>
-                              }
-                              <Image
-                                style={{
-                                  alignSelf: 'center',
-                                  height: 50,
-                                  width: 50,
-                                  borderWidth: 1,
-                                  borderRadius: 75
-                                }}
-                                source={{uri:image.url}}
-                                resizeMode="stretch"
-                              />
-                              </View>
+                            </View>
                           </Card.Content>
-                          <Paragraph style={{fontSize:20, marginTop: 10, marginLeft: 20}}>Points Needed:</Paragraph> 
-                          <Paragraph style={{fontSize:20, marginTop: 10, marginLeft: 20, fontWeight:'bold'}}>{image.points}</Paragraph>
                         </Card>
                       ))
                     }
                   </ScrollView>
               </View>
-
-
-          <Text style={{alignSelf:'center',fontSize:25,marginTop:20}}>Coffee</Text>
-          <View style={{flexDirection:'row'}}>
-          <ProgressChart
-            data={{
-              labels: ["Remaining"], 
-              data: [0.6]}
-            }
-            width={Dimensions.get('window').width/2}
-            height={125}
-            strokeWidth={16}
-            radius={30}
-            chartConfig={{
-              backgroundColor: '#F9F9F9',
-              backgroundGradientFrom: '#F9F9F9',
-              backgroundGradientTo: '#F9F9F9',
-              decimalPlaces: 2,
-              color: (opacity = 1) => `rgba(70, 168, 74, ${opacity})`,
-            }}
-            hideLegend={true}
-            accessor={"population"}
-            style={{
-              borderRadius: 16,
-              alignSelf:'center',
-            }}
-          />
-          <View style={{marginTop:20,marginLeft:-20}}>
-            <Text style={{fontSize:17,margin:5,fontWeight:'bold',alignSelf:'center'}}>
-              Remaining: $4
-            </Text>
-            <Text style={{fontSize:17,margin:5,alignSelf:'center'}}>
-              Total Spent: $6
-            </Text>
-            <Text style={{fontSize:17,margin:5,alignSelf:'center'}}>
-              Budget Alloted: $10
-            </Text>
-          </View>
-          </View>
-        </View>
+              <Modal
+              animationType="slide"
+              transparent={true}
+              visible={inputModalVisible}
+              onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                this.setState({ inputModalVisible: false });
+              }}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>Log Purchase</Text>
+                  {/* TODO: change to dropdown menu from categories */}
+                  <TextInput
+                    label="Category"
+                    value={category}
+                    onChangeText={this.setCategory}
+                    style={styles.inputBox}
+                    theme={{ colors: { primary: '#5B5B5B' } }}
+                  />
+                  <TextInput
+                    label="Amount"
+                    value={amount}
+                    onChangeText={this.setAmount}
+                    style={styles.inputBox}
+                    theme={{ colors: { primary: '#5B5B5B' } }}
+                  />
+                  <Button
+                    mode="contained"
+                    uppercase={false}
+                    style={styles.modalButton}
+                    onPress={() => this.updatePurchases()}
+                  >
+                    <Text style={styles.modalButtonText}>Submit</Text>
+                  </Button>
+                  <Button
+                    mode="contained"
+                    uppercase={false}
+                    style={styles.modalButton}
+                    onPress={() => this.setState({ inputModalVisible: false })}
+                  >
+                    <Text style={styles.modalButtonText}>Cancel</Text>
+                  </Button>
+                </View>
+              </View>
+            </Modal>
       </View>
     </ScrollView>
     </SafeAreaView>
@@ -342,13 +365,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   card:{
-    height: 150,
+    height: 200,
     width: 355,
     backgroundColor: '#F9F9F9'
   },
   cardContent:{
     justifyContent: 'center',
-    flexDirection: 'row',
   },
   cardImageView:{
     alignSelf: 'flex-end',
@@ -431,7 +453,8 @@ const styles = StyleSheet.create({
   },
   category:{
     backgroundColor: '#F9F9F9',
-    width: width - 20,
-    alignSelf: 'center',
+    width: 300,
+    justifyContent: 'center',
+    flexDirection: 'row',
   }
 });
