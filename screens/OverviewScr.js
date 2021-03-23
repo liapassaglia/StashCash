@@ -14,8 +14,8 @@ export default class OverviewScr extends React.Component {
       screenHeight: 0,
       categories: [],
       inputModalVisible: false,
-      label: '',
-      goal: '',
+      category: '',
+      amount: '',
     }
   }
 
@@ -23,14 +23,14 @@ export default class OverviewScr extends React.Component {
     this.setState({ screenHeight: contentHeight });
   }
 
-  createJar = () => {
-    const jar = {
-      label: this.state.label,
-      goal: this.state.goal,
+  updatePurchases = () => {
+    const purchase = {
+      category: this.state.category,
+      amount: this.state.amount,
     }
-    this.categoryList.push(jar);
+    this.categoryList.push(purchase);
     this.setState({ categories: [...this.categoryList], inputModalVisible: false });
-    this.setState({ label: '', goal: '' })
+    this.setState({ category: '', amount: '' })
   }
 
   componentDidMount() {
@@ -43,25 +43,32 @@ export default class OverviewScr extends React.Component {
     });
   }
 
-  setLabel = (label) => {
+  setCategory = (category) => {
     this.setState({
-      label: label,
+      category: category,
     })
   }
 
-  setGoal = (goal) => {
+  setAmount = (amount) => {
     this.setState({
-      goal: goal,
+      amount: amount,
     })
   }
 
   render() {
     const { navigation } = this.props;
-    const { categories, inputModalVisible, label, goal } = this.state;
+    const { categories, inputModalVisible, category, amount } = this.state;
     const scrollEnabled = this.state.screenHeight > height;
+    const data = [
+      { name: 'Gas', alotted: 80, spent: 50, remaining: 30, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+      { name: 'Groceries', alotted: 200, spent: 120, remaining: 80, population: 2800000, color: '#000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+      { name: 'Clothes', alotted: 80, spent: 10, remaining: 70, population: 527612, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+      { name: 'Venmo', alotted: 35, spent: 5, remaining: 30, population: 8538000, color: '#ffffff', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+      { name: 'Other', alotted: 85, spent: 22, remaining: 63, population: 11920000, color: 'rgb(0, 0, 255)', legendFontColor: '#7F7F7F', legendFontSize: 15 }
+    ]
     const renderItem = ({ item }) => {
       return (
-        <PieChartCard label={item.label} goal={item.goal} />
+        <PieChartCard categories={data} />
       );
     };
     return (
@@ -86,11 +93,7 @@ export default class OverviewScr extends React.Component {
               </Button>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: 'white' }}>
-              <FlatList
-                data={categories}
-                renderItem={renderItem}
-                keyExtractor={item => item.label}
-              />
+              <PieChartCard categories={data} style={styles.centeredView}/>
             </View>
             <Modal
               animationType="slide"
@@ -107,15 +110,15 @@ export default class OverviewScr extends React.Component {
                   {/* TODO: change to dropdown menu from categories */}
                   <TextInput
                     label="Category"
-                    value={label}
-                    onChangeText={this.setLabel}
+                    value={category}
+                    onChangeText={this.setCategory}
                     style={styles.inputBox}
                     theme={{ colors: { primary: '#5B5B5B' } }}
                   />
                   <TextInput
                     label="Amount"
-                    value={goal}
-                    onChangeText={this.setGoal}
+                    value={amount}
+                    onChangeText={this.setAmount}
                     style={styles.inputBox}
                     theme={{ colors: { primary: '#5B5B5B' } }}
                   />
@@ -123,7 +126,7 @@ export default class OverviewScr extends React.Component {
                     mode="contained"
                     uppercase={false}
                     style={styles.modalButton}
-                    onPress={() => this.createJar()}
+                    onPress={() => this.updatePurchases()}
                   >
                     <Text style={styles.modalButtonText}>Submit</Text>
                   </Button>
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginRight: 10,
   },
-  jar: {
+  purchase: {
     justifyContent: 'center',
     height: 250
   },

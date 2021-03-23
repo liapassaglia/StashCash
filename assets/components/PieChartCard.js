@@ -9,15 +9,17 @@ import {
     Modal,
 } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native'
-const screenWidth = Dimensions.get('window').width
+import { Dimensions } from 'react-native';
+const screenWidth = Dimensions.get('window').width;
 import { TextInput, Button } from 'react-native-paper';
+import Carousel from 'react-native-snap-carousel';
+import CategoryPieChart from './CategoryPieChart';
 
 export default class PieChartCard extends Component {
     constructor(props) {
         super(props);
         const {
-            label, goal
+            categories
         } = this.props;
         this.state = {
             total: 0,
@@ -44,14 +46,22 @@ export default class PieChartCard extends Component {
 
     
     render() {
-        const data = [
-            { name: 'Gas', alotted: 80, spent: 50, remaining: 30, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'Groceries', alotted: 200, spent: 120, remaining: 80, population: 2800000, color: '#000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'Clothes', alotted: 80, spent: 10, remaining: 70, population: 527612, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'Venmo', alotted: 35, spent: 5, remaining: 30, population: 8538000, color: '#ffffff', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'Other', alotted: 85, spent: 22, remaining: 63, population: 11920000, color: 'rgb(0, 0, 255)', legendFontColor: '#7F7F7F', legendFontSize: 15 }
-        ]
-        const { label, goal } = this.props;
+         const renderItem = ({ item, index }) => {
+            return (
+                <View
+                    style={{
+                        backgroundColor: '#DFDDDD',
+                        borderRadius: 5,
+                        height: 250,
+                        padding: 50,
+                        marginLeft: 25,
+                        marginRight: 25,
+                    }}>
+                    <CategoryPieChart info={item}></CategoryPieChart>
+                </View>
+            );
+        };
+        const { categories } = this.props;
         const { total, inputModalVisible, text } = this.state;
         const chartConfig = {
             backgroundGradientFrom: '#1E2923',
@@ -65,7 +75,7 @@ export default class PieChartCard extends Component {
             <View style={styles.container}>
                 <View>
                 <PieChart
-                    data={data}
+                    data={categories}
                     width={screenWidth}
                     height={220}
                     chartConfig={chartConfig}
@@ -74,17 +84,18 @@ export default class PieChartCard extends Component {
                     paddingLeft="15"
                 />
                 </View>
-                <ScrollView
-                    horizontal={true}
-                    contentContainerStyle={{ ...styles.scrollView, width: 200 }}
-                    showsHorizontalScrollIndicator={false}
-                    onContentSizeChange={(w, h) => init(w)}
-                    scrollEventThrottle={200}
-                    pagingEnabled
-                    decelerationRate="fast"
-                >
-                    {data.category}
-                </ScrollView>
+                <View
+                    style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
+                    <Carousel
+                        layout={'default'}
+                        ref={(ref) => (this.carousel = ref)}
+                        data={categories}
+                        sliderWidth={400}
+                        itemWidth={400}
+                        renderItem={renderItem}
+                        onSnapToItem={(index) => this.setState({ activeIndex: index })}
+                    />
+                </View>
             </View>
         )
     }

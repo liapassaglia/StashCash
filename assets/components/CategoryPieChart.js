@@ -16,7 +16,7 @@ export default class CategoryPieChart extends Component {
     constructor(props) {
         super(props);
         const {
-            category, goal, spent, remaining
+            info
         } = this.props;
         this.state = {
             total: 0,
@@ -43,10 +43,10 @@ export default class CategoryPieChart extends Component {
 
 
     render() {
-        const { category, goal, spent, remaining } = this.props;
+        const { info } = this.props;
         const data = [
-            { name: 'Spent', population: spent, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'Remaining', population: remaining, color: '#F00', legendFontColor: '#7F7F7F', legendFontSize: 15 }
+            { name: 'Spent', number: info.spent, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+            { name: 'Remaining', number: info.remaining, color: '#F00', legendFontColor: '#7F7F7F', legendFontSize: 15 }
         ]
         const { total, inputModalVisible, text } = this.state;
         const chartConfig = {
@@ -56,17 +56,18 @@ export default class CategoryPieChart extends Component {
         }
         return (
             <View style={styles.container}>
-                <Text style={styles.text}>{category}</Text>
-                <Text style={styles.text}>Goal: ${goal}</Text>
+                <Text style={styles.text}>{this.props.category}</Text>
+                <Text style={styles.text}>Goal: ${this.props.goal}</Text>
                 <View>
                     <PieChart
                         data={data}
                         width={screenWidth}
-                        height={220}
+                        height={180}
                         chartConfig={chartConfig}
-                        accessor="population"
+                        accessor="number"
                         backgroundColor="transparent"
-                        paddingLeft="15"
+                        paddingLeft="0"
+                        style={styles.piechart}
                     />
                 </View>
             </View>
@@ -83,6 +84,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         flex: 1,
+    },
+    piechart: {
+        flexDirection: row
     },
     jar: {
         backgroundColor: "white",
