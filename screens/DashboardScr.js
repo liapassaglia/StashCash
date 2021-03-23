@@ -28,6 +28,8 @@ import {
   editBudgetStatistics,
   getClaimedRewards,
   changeEmail,
+  editPassword,
+  editEmail
 } from "../util/firestoreMethods";
 import { firestore, auth } from "../config/firebase";
 
@@ -88,7 +90,7 @@ export default class DashboardScr extends React.Component {
       points: 0,
       streak: 0,
       username: auth.currentUser.email,
-      password: "******",
+      password: 'dummyPwd',
       initialLoad: true,
       changePassword: false,
       changeUsername: false,
@@ -196,6 +198,11 @@ export default class DashboardScr extends React.Component {
       monthlyFrequency: this.state.monthlySwitch,
     });
 
+    if (this.state.password !== 'dummyPwd') {
+      editPassword(this.state.password);
+    }
+    //editEmail(this.state.username)
+    
     // call your
     this.baseState = this.state;
     this.setState({ settingsModalVisible: false });
@@ -499,6 +506,9 @@ export default class DashboardScr extends React.Component {
                       value={password}
                       onChangeText={this.setPassword}
                       style={styles.inputBox}
+                      autoCorrect={false}
+                      secureTextEntry={true}
+                      autoCapitalize="none"
                       theme={{ colors: { primary: "#5B5B5B" } }}
                     />
                     <Paragraph
