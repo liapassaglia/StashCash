@@ -27,65 +27,58 @@ export default class DashboardScr extends React.Component{
     this.userData = [];
     this.dataOverview = [
       {
-        name: "Coffee",
-        population: 6,
+        name: "Food",
+        alotted: 6,
         color: "#EB9341",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
       {
-        name: "Going Out",
-        population: 30,
+        name: "Ride Fare",
+        alotted: 30,
         color: "#39A5D6",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
       {
-        name: "Gas",
-        population: 15,
+        name: "Entertainment",
+        alotted: 20,
         color: "#5CBD61",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
       {
-        name: "Eating Out",
-        population: 10,
+        name: "Coffee",
+        alotted: 10,
         color: "#F0EC2F",
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15
-      },
-      {
-        name: "Remaining",
-        population: 34,
-        color: "#435FBB",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
     ];
     this.dataCategories = [
       {
-        category: 'Coffee',
-        remaining: 4,
-        spent: 6,
-        alloted: 10
+        category: 'Food',
+        remaining: 13,
+        spent: 27,
+        alloted: 40
       },
       {
-        category: 'Going Out',
+        category: 'Ride Fare',
         remaining: 0,
         spent: 30,
         alloted: 30
       },
       {
-        category: 'Gas',
-        remaining: 20,
+        category: 'Entertainment',
+        remaining: 5,
         spent: 15,
-        alloted: 35
+        alloted: 20
       },
       {
-        category: 'Eating Out',
-        remaining: 10,
-        spent: 25,
-        alloted: 40
+        category: 'Coffee',
+        remaining: 10.00,
+        spent: 4,
+        alloted: 15.00
       }
     ]
     this.state = {
@@ -174,7 +167,7 @@ export default class DashboardScr extends React.Component{
                 borderRadius: 10,
               },
             }}
-            accessor={"population"}
+              accessor={"alotted"}
             style={{
               marginVertical: 8,
               borderRadius: 16,
@@ -195,7 +188,7 @@ export default class DashboardScr extends React.Component{
                             <Text style={{alignSelf:'center',fontSize:25,marginTop:20}}>{image.category}</Text>
                             <View style={{flexDirection:'row'}}>
                             <ProgressChart
-                              data={[image.spent/100]}
+                              data={[image.spent/image.alloted]}
                               width={Dimensions.get('window').width/2}
                               height={125}
                               strokeWidth={16}
