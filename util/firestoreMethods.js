@@ -36,6 +36,40 @@ export function addNewUser(uid) {
   }
 }
 
+export async function getBudgetStats() {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
+    let budgetStatsResponse = {};
+    // Create budget-statistics collection ref
+    let budgetStatsCollectionRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("budget-statistics");
+
+    await budgetStatsCollectionRef
+      .doc("points")
+      .get()
+      .then((doc) => {
+        budgetStatsResponse.points = doc.data().currentPoints;
+      });
+    await budgetStatsCollectionRef
+      .doc("streaks")
+      .get()
+      .then((doc) => {
+        budgetStatsResponse.streak = doc.data().weekStreak;
+      });
+    return budgetStatsResponse;
+  } catch (err) {
+    console.log(
+      "Inside firestoreMethods.js, printing error!",
+      err,
+      err.message
+    );
+    Alert.alert("Error in getting budget stats!", err.message);
+  }
+}
 export function editBudgetStatistics(uid, newStats) {
   try {
     const db = firebase.firestore();

@@ -23,46 +23,13 @@ import QRCode from "../assets/images/QR.png";
 import {
   getNotificationSettings,
   editNotificationSettings,
+  getBudgetStats,
 } from "../util/firestoreMethods";
 
 const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");
-const allRewards = [
-  {
-    name: "Halo Donuts",
-    description: "Free donut",
-    url:
-      "https://static1.squarespace.com/static/5d890dc76001c32118d9c7f7/t/5e0143ae9bb1cd38ee77d5b1/1613515544775/?format=1500w",
-    points: 120,
-  },
-  {
-    name: "Sweetberries",
-    description: "Free medium create your own icecream",
-    url:
-      "https://sweetberries.com/wp-content/uploads/2010/08/logo_oval2_big.png",
-    points: 180,
-  },
-  {
-    name: "Social Restaurant",
-    description: "$5 off your meal",
-    url: "http://thesocialgnv.com/wp-content/uploads/2016/10/logo.png",
-    points: 140,
-  },
-  {
-    name: "Salty Dog",
-    description: "Free pint of our Dog Water beer",
-    url:
-      "https://lh3.googleusercontent.com/fNlfR27CeNWPi8gHTZduTj4dU-z-HjEyEZISe2vvoAwHe1BRpKekcxSh2MDbj5pH97QRarWlFKxndgRXCaqoXfS_kwVasFAapjMfOuZy=s340",
-    points: 200,
-  },
-  {
-    name: "Opus Coffee",
-    description: "One free medium iced coffee",
-    url:
-      "https://static1.squarespace.com/static/55f862a7e4b09ee1e2fc39c4/t/57fb8461c534a5767ea97af7/1614283302053/",
-    points: 100,
-  },
-];
+
+const allRewards = [];
 
 export default class DashboardScr extends React.Component {
   constructor(props) {
@@ -78,7 +45,8 @@ export default class DashboardScr extends React.Component {
       settingsModalVisible: false,
       QRModalVisible: false,
       rewards: [],
-      points: 300,
+      points: 0,
+      streak: 0,
       username: "tim@gmail.com",
       password: "abcabc",
       initialLoad: true,
@@ -172,7 +140,7 @@ export default class DashboardScr extends React.Component {
     this.setState({ settingsModalVisible: false });
   };
 
-  getNotifs() {
+  loadNotifs() {
     getNotificationSettings().then((notifFrequency) => {
       console.log("inside Dashboard, printing result: ", notifFrequency);
       if (notifFrequency.dailyFrequency) {
@@ -188,10 +156,22 @@ export default class DashboardScr extends React.Component {
       this.baseState = this.state;
     });
   }
+
+  loadBudgetStats() {
+    getBudgetStats().then((stats) => {
+      this.setState({ points: stats.points });
+      this.setState({ streak: stats.streak });
+
+      this.baseState = this.state;
+    });
+  }
   componentDidMount() {
     this.setState({ rewards: [...this.userRewards] });
     // get user's default notifications settings (if any) from firestore
-    this.getNotifs();
+    this.loadNotifs();
+
+    // get user's budget statistics (points and streaks)
+    this.loadBudgetStats();
   }
 
   render() {
@@ -204,6 +184,7 @@ export default class DashboardScr extends React.Component {
       QRModalVisible,
       rewards,
       points,
+      streak,
       username,
       password,
     } = this.state;
@@ -230,7 +211,7 @@ export default class DashboardScr extends React.Component {
             </View>
             <View style={styles.streak}>
               <Text style={styles.streakText}>
-                Budget Goal Streak: 7 weeks!
+                Budget Goal Streak: {streak} weeks!
               </Text>
             </View>
             <View style={styles.points}>
@@ -730,3 +711,40 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
+const placeholderdata = [
+  {
+    name: "Halo Donuts",
+    description: "Free donut",
+    url:
+      "https://static1.squarespace.com/static/5d890dc76001c32118d9c7f7/t/5e0143ae9bb1cd38ee77d5b1/1613515544775/?format=1500w",
+    points: 120,
+  },
+  {
+    name: "Sweetberries",
+    description: "Free medium create your own icecream",
+    url:
+      "https://sweetberries.com/wp-content/uploads/2010/08/logo_oval2_big.png",
+    points: 180,
+  },
+  {
+    name: "Social Restaurant",
+    description: "$5 off your meal",
+    url: "http://thesocialgnv.com/wp-content/uploads/2016/10/logo.png",
+    points: 140,
+  },
+  {
+    name: "Salty Dog",
+    description: "Free pint of our Dog Water beer",
+    url:
+      "https://lh3.googleusercontent.com/fNlfR27CeNWPi8gHTZduTj4dU-z-HjEyEZISe2vvoAwHe1BRpKekcxSh2MDbj5pH97QRarWlFKxndgRXCaqoXfS_kwVasFAapjMfOuZy=s340",
+    points: 200,
+  },
+  {
+    name: "Opus Coffee",
+    description: "One free medium iced coffee",
+    url:
+      "https://static1.squarespace.com/static/55f862a7e4b09ee1e2fc39c4/t/57fb8461c534a5767ea97af7/1614283302053/",
+    points: 100,
+  },
+];
