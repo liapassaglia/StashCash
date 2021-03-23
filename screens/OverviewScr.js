@@ -9,6 +9,7 @@ import {
   ContributionGraph,
   StackedBarChart
 } from "react-native-chart-kit";
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const {width} = Dimensions.get('window');
 const {height} = Dimensions.get('window');
@@ -28,7 +29,7 @@ export default class DashboardScr extends React.Component{
     this.dataOverview = [
       {
         name: "Food",
-        alotted: 6,
+        alotted: 40,
         color: "#EB9341",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
@@ -86,8 +87,8 @@ export default class DashboardScr extends React.Component{
         currentIndex: 0,
         data: [],
         inputModalVisible: false,
-        category: '',
-        amount: '',
+        category: 'Food',
+        amount: 0,
     }
     //preserve inital states
     this.baseState = this.state
@@ -126,6 +127,12 @@ export default class DashboardScr extends React.Component{
       amount: amount,
     })
   }
+
+  // updatePurchases = (category, amount) => {
+  //   this.setState({
+  //     amount: amount,
+  //   })
+  // }
 
   render(){
   const {inputModalVisible,category,amount} = this.state;
@@ -201,7 +208,7 @@ export default class DashboardScr extends React.Component{
                                 color: (opacity = 1) => `rgba(70, 168, 74, ${opacity})`,
                               }}
                               hideLegend={true}
-                              accessor={"population"}
+                              accessor={"alotted"}
                               style={{
                                 borderRadius: 16,
                                 alignSelf:'center',
@@ -238,13 +245,24 @@ export default class DashboardScr extends React.Component{
                 <View style={styles.modalView}>
                   <Text style={styles.modalText}>Log Purchase</Text>
                   {/* TODO: change to dropdown menu from categories */}
-                  <TextInput
-                    label="Category"
-                    value={category}
-                    onChangeText={this.setCategory}
-                    style={styles.inputBox}
-                    theme={{ colors: { primary: '#5B5B5B' } }}
-                  />
+                <DropDownPicker
+                  items={[
+                    { label: 'Food', value: 'Food', },
+                    { label: 'Ride Fare', value: 'Ride Fare',},
+                    { label: 'Entertainment', value: 'Entertainment',},
+                    { label: 'Coffee', value: 'Coffee', },
+                  ]}
+                  defaultValue={this.state.category}
+                  containerStyle={styles.inputBox}
+                  style={{ backgroundColor: '#fafafa' }}
+                  itemStyle={{
+                    justifyContent: 'flex-start'
+                  }}
+                  dropDownStyle={{ backgroundColor: '#fafafa' }}
+                  onChangeItem={item => this.setState({
+                    category: item.value
+                  })}
+                />
                   <TextInput
                     label="Amount"
                     value={amount}
