@@ -2,11 +2,7 @@ import React, { Component, useState } from 'react';
 import {
     StyleSheet,
     Text,
-    View,
-    ScrollView,
-    TouchableOpacity,
-    ImageBackground,
-    Modal,
+    View
 } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
@@ -85,6 +81,7 @@ export default class PieChartCard extends Component {
                 />
                 </View>
                 <View
+                    //TODO: fix styling on the card view
                     style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
                     <Carousel
                         layout={'default'}
@@ -121,10 +118,6 @@ const styles = StyleSheet.create({
         marginRight: 50,
         flex: 1,
     },
-    img: {
-        height: 200,
-        width: 200,
-    },
     labelView: {
         position: 'absolute',
         top: 0,
@@ -150,58 +143,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 22
     },
-    modalView: {
-        margin: 20,
-        backgroundColor: '#7AA47A',
-        borderRadius: 20,
-        height: '50%',
-        width: '80%',
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
-    button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 10,
-        margin: 5,
-        backgroundColor: '#ffffff',
-    },
-    buttonText: {
-        color: '#5B5B5B',
-        fontSize: 20,
-        textAlign: "center"
-    },
-    modalText: {
-        marginBottom: 20,
-        padding: 15,
-        fontSize: 30,
-        fontWeight: 'bold',
-        color: '#ffffff',
-        textAlign: "center"
-    },
-    inputBox: {
-        height: 50,
-        width: 250,
-        backgroundColor: '#ffffff',
-        marginBottom: 35,
-    },
-    modalButton: {
-        height: 35,
-        width: 200,
-        backgroundColor: '#ffffff',
-        margin: 15,
-        fontSize: 20
-    },
-    modalButtonText: {
-        color: '#5B5B5B',
-        fontSize: 15,
-        textAlign: "center"
-    },
+    
+    
+    
 });

@@ -92,7 +92,9 @@ export default class OverviewScr extends React.Component {
                 <Text style={{ color: '#4B674C' }}>Log Payment</Text>
               </Button>
             </View>
+            {/* TODO: add a way to switch between week, month, year */}
             <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: 'white' }}>
+              {/* TODO: work on styling for the pi Chart */}
               <PieChartCard categories={data} style={styles.centeredView}/>
             </View>
             <Modal
