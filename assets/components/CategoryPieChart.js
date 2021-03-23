@@ -40,6 +40,8 @@ export default class CategoryPieChart extends Component {
 
     render() {
         const { info } = this.props;
+        const name= info.category;
+        const goal= info.alotted;
         const data = [
             { name: 'Spent', number: info.spent, color: '#D43636', legendFontColor: '#7F7F7F', legendFontSize: 15 },
             { name: 'Remaining', number: info.remaining, color: '#16B116', legendFontColor: '#7F7F7F', legendFontSize: 15 }
@@ -52,8 +54,8 @@ export default class CategoryPieChart extends Component {
         }
         return (
             <View style={styles.container}>
-                <Text style={styles.text}>{this.props.category}</Text>
-                <Text style={styles.text}>Goal: ${this.props.goal}</Text>
+                <Text style={styles.bigText}>{info.name}</Text>
+                <Text style={styles.text}>Goal: ${goal}</Text>
                 <View>
                     <PieChart
                         data={data}
@@ -109,6 +111,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         borderColor: 'black',
         borderWidth: 1
+    },
+    bigText: {
+        fontSize: 27,
+        fontWeight: 'bold'
     },
     text: {
         fontSize: 20,
