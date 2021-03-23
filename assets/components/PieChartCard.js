@@ -48,10 +48,11 @@ export default class PieChartCard extends Component {
                     style={{
                         backgroundColor: '#DFDDDD',
                         borderRadius: 5,
-                        height: 250,
-                        padding: 50,
+                        height: 275,
+                        padding: 25,
                         marginLeft: 25,
                         marginRight: 25,
+                        justifyContent: 'center'
                     }}>
                     <CategoryPieChart info={item}></CategoryPieChart>
                 </View>
@@ -73,7 +74,7 @@ export default class PieChartCard extends Component {
                 <PieChart
                     data={categories}
                     width={screenWidth}
-                    height={220}
+                    height={250}
                     chartConfig={chartConfig}
                     accessor="alotted"
                     backgroundColor="transparent"

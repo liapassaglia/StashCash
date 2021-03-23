@@ -41,8 +41,8 @@ export default class CategoryPieChart extends Component {
     render() {
         const { info } = this.props;
         const data = [
-            { name: 'Spent', number: info.spent, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { name: 'Remaining', number: info.remaining, color: '#F00', legendFontColor: '#7F7F7F', legendFontSize: 15 }
+            { name: 'Spent', number: info.spent, color: '#D43636', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+            { name: 'Remaining', number: info.remaining, color: '#16B116', legendFontColor: '#7F7F7F', legendFontSize: 15 }
         ]
         const { total, inputModalVisible, text } = this.state;
         const chartConfig = {
@@ -57,13 +57,13 @@ export default class CategoryPieChart extends Component {
                 <View>
                     <PieChart
                         data={data}
-                        width={screenWidth}
+                        width={300}
                         height={180}
                         chartConfig={chartConfig}
                         accessor="number"
                         backgroundColor="transparent"
                         paddingLeft="0"
-                        style={styles.piechart}
+                        justifyContent = 'center'
                     />
                 </View>
             </View>
