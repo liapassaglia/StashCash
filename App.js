@@ -11,6 +11,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Appbar } from "react-native-paper";
+import Icon from 'react-native-vector-icons/Ionicons'; 
 
 import SigninScr from "./screens/SigninScr";
 import SignupScr from "./screens/SignupScr";
@@ -66,15 +67,47 @@ const AppNavigation = () => {
       screenOptions={{
         header: (props) => <CustomeNavigationBar {...props} />,
       }}
+      tabBarOptions={{
+        activeTintColor: '#4B674C',
+        height: 60,
+      }}
     >
-      <AppStack.Screen name="OverviewScr" component={OverviewScr} />
-      <AppStack.Screen name="BudgetingScr" component={BudgetingScr} />
+      <AppStack.Screen 
+      name="OverviewScr" 
+      component={OverviewScr} 
+      options={{
+        title:'Overview',
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="pie-chart" color={color} size={size} />
+      )}}
+      />
+      <AppStack.Screen 
+      name="BudgetingScr" 
+      component={BudgetingScr} 
+      options={{
+        title:'Budgeting',
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="create" color={color} size={size} />
+      )}}
+      />
       <AppStack.Screen
         name="MoneyJarScr"
         component={MoneyJarScr}
-        options={{ title: "Money Jars" }}
+        options={{ 
+          title: "Money Jars", 
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="logo-usd" color={color} size={size} />
+        )}}
       />
-      <AppStack.Screen name="DashboardScr" component={DashboardScr} />
+      <AppStack.Screen 
+      name="DashboardScr" 
+      component={DashboardScr} 
+      options={{ 
+        title: "User Dashboard",
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="person-circle" color={color} size={size} />
+      )}}
+      />
     </AppStack.Navigator>
   );
 };
