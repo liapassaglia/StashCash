@@ -45,11 +45,11 @@ export default class PieChartCard extends Component {
     
     render() {
         const data = [
-            { category: 'Gas', alotted: 80, spent: 50, remaining: 30, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { category: 'Groceries', alotted: 200, spent: 120, remaining: 80, population: 2800000, color: '#F00', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { category: 'Clothes', alotted: 80, spent: 10, remaining: 70, population: 527612, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { category: 'Venmo', alotted: 35, spent: 5, remaining: 30, population: 8538000, color: '#ffffff', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-            { category: 'Other', alotted: 85, spent: 22, remaining: 63, population: 11920000, color: 'rgb(0, 0, 255)', legendFontColor: '#7F7F7F', legendFontSize: 15 }
+            { name: 'Gas', alotted: 80, spent: 50, remaining: 30, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+            { name: 'Groceries', alotted: 200, spent: 120, remaining: 80, population: 2800000, color: '#000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+            { name: 'Clothes', alotted: 80, spent: 10, remaining: 70, population: 527612, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+            { name: 'Venmo', alotted: 35, spent: 5, remaining: 30, population: 8538000, color: '#ffffff', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+            { name: 'Other', alotted: 85, spent: 22, remaining: 63, population: 11920000, color: 'rgb(0, 0, 255)', legendFontColor: '#7F7F7F', legendFontSize: 15 }
         ]
         const { label, goal } = this.props;
         const { total, inputModalVisible, text } = this.state;

@@ -200,21 +200,3 @@ export function addSpendingCategory(uid, newSpendingCatInfo) {
     );
   }
 }
-
-// export function addExpenditure(uid, amount, newSpendingCatInfo) {
-//   try {
-//     // Create jar collection ref
-//     let jarCollectionRef = db.collection("users").doc(uid).collection("jars");
-
-//     jarCollectionRef
-//       .doc(editJarInfo.name)
-//       .update({ savings: editJarInfo.savingsTotal });
-//   } catch (err) {
-//     console.log(
-//       "Inside firestoreMethods.js, printing error!",
-//       err,
-//       err.message
-//     );
-//     Alert.alert("Error occured when adding savings to a jar!", err.message);
-//   }
-// }
