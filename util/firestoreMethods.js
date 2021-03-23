@@ -176,16 +176,40 @@ export function addRecurringMonthlyPayments(uid, newRecPayment) {
   }
 }
 
-export function editNotificationSettings(uid, newNotifSettings) {
+export async function getNotificationSettings() {
   try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
+    let frequency = {};
+    let notificationSettingsRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("notification-settings")
+      .doc("notification-frequency");
+
+    await notificationSettingsRef.get().then((doc) => {
+      console.log("inside getNotifications, printing doc.data()", doc.data());
+      frequency = doc.data();
+    });
+    return frequency;
+  } catch (err) {
+    console.log("inside firestoreMethods, getting notif setting error");
+    Alert.alert("Error occured when getting your notif settings!", err.message);
+  }
+}
+
+export function editNotificationSettings(newNotifSettings) {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
     let notificationSettingsRef = db
       .collection("users")
       .doc(uid)
       .collection("notification-settings");
 
-    notificationSettingsRef
-      .doc("notification-frequency")
-      .set({ frequency: newNotifSettings.frequency });
+    notificationSettingsRef.doc("notification-frequency").set(newNotifSettings);
   } catch (err) {
     console.log(
       "Inside firestoreMethods.js, printing error!",
