@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, Dimensions, ScrollView, StyleSheet, Text, View, Image, Modal, Alert } from 'react-native';
+import { SafeAreaView, Dimensions, ScrollView, StyleSheet, Text, View, Alert } from 'react-native';
 import { Button, DataTable, TextInput } from 'react-native-paper';
 
 const { height } = Dimensions.get('window');
@@ -294,4 +294,3 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
-
