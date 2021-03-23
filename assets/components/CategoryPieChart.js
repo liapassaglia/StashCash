@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     piechart: {
-        flexDirection: row
+        flexDirection: 'column'
     },
     jar: {
         backgroundColor: "white",
