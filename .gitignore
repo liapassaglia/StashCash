@@ -11,5 +11,8 @@ web-build/
 .prettierignore
 .env
 
+yarn.lock
+package-lock.json
+
 # macOS
 .DS_Store
