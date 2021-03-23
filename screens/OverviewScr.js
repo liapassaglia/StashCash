@@ -61,11 +61,10 @@ export default class OverviewScr extends React.Component {
     const scrollEnabled = this.state.screenHeight > height;
     const color = ['#EB9341', '#39A5D6', '#5CBD61', '#F0EC2F', '#435FBB', '#C22C2C', '#D479CD']
     const data = [
-      { name: 'Gas', alotted: 80, spent: 50, remaining: 30, color: color[0], legendFontColor: '#7F7F7F', legendFontSize: 15 },
-      { name: 'Groceries', alotted: 200, spent: 120, remaining: 80, population: 2800000, color: color[1], legendFontColor: '#7F7F7F', legendFontSize: 15 },
-      { name: 'Clothes', alotted: 80, spent: 10, remaining: 70, population: 527612, color: color[2], legendFontColor: '#7F7F7F', legendFontSize: 15 },
-      { name: 'Venmo', alotted: 35, spent: 5, remaining: 30, population: 8538000, color: color[3], legendFontColor: '#7F7F7F', legendFontSize: 15 },
-      { name: 'Other', alotted: 85, spent: 22, remaining: 63, population: 11920000, color: color[4], legendFontColor: '#7F7F7F', legendFontSize: 15 }
+      { name: 'Food', alotted: 50, spent: 25, remaining: 30, color: color[0], legendFontColor: '#7F7F7F', legendFontSize: 15 },
+      { name: 'Rent', alotted: 100, spent: 100, remaining: 80, population: 2800000, color: color[1], legendFontColor: '#7F7F7F', legendFontSize: 15 },
+      { name: 'Entertainment', alotted: 25, spent: 10, remaining: 70, population: 527612, color: color[2], legendFontColor: '#7F7F7F', legendFontSize: 15 },
+      { name: 'Other', alotted: 25, spent: 0, remaining: 70, population: 527612, color: color[3], legendFontColor: '#7F7F7F', legendFontSize: 15 }
     ]
     const renderItem = ({ item }) => {
       return (
@@ -193,7 +192,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 22,
+    padding: 25
   },
   modalView: {
     margin: 20,
