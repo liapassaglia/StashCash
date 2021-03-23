@@ -36,6 +36,52 @@ export function addNewUser(uid) {
   }
 }
 
+export async function getWeeklyBudget() {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
+    let weeklyBudgetResponse;
+
+    await db
+      .collection("users")
+      .doc(uid)
+      .get()
+      .then((doc) => {
+        weeklyBudgetResponse = doc.data().weeklyBudget;
+        console.log(
+          "inside getWeeklyBudget(), printing weekly budget, ",
+          weeklyBudgetResponse
+        );
+      });
+
+    return weeklyBudgetResponse;
+  } catch (err) {
+    console.log(
+      "Inside firestoreMethods.js, printing error!",
+      err,
+      err.message
+    );
+    Alert.alert("Error in getting your weekly budget!", err.message);
+  }
+}
+
+export function editWeeklyBudget(newWeeklyBudget) {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
+    db.collection("users").doc(uid).set({ weeklyBudget: newWeeklyBudget });
+  } catch (err) {
+    console.log(
+      "Inside firestoreMethods.js, printing error!",
+      err,
+      err.message
+    );
+    Alert.alert("Error in setting your weekly budget!", err.message);
+  }
+}
+
 export async function getBudgetStats() {
   try {
     const db = firestore;
@@ -120,8 +166,6 @@ export function addClaimedReward(rewardInfo) {
       description: rewardInfo.description,
       url: rewardInfo.url,
     });
-
-    // TODO: decrement currentPoints from budgetStatsCollection
   } catch (err) {
     console.log(
       "Inside firestoreMethods.js, printing error!",
@@ -221,32 +265,6 @@ export function addSavingsToJar(editJarInfo) {
   }
 }
 
-export function addRecurringMonthlyPayments(uid, newRecPayment) {
-  try {
-    // Create monthly-recurring-payments collection ref
-    let monthlyRecurringPaymentsCollection = db
-      .collection("users")
-      .doc(uid)
-      .collection("monthly-recurring-payments");
-
-    monthlyRecurringPaymentsCollection.doc(newRecPayment.name).set({
-      amount: newRecPayment.amount,
-      name: newRecPayment.name,
-      nextPayment: newRecPayment.nextPayment,
-    });
-  } catch (err) {
-    console.log(
-      "Inside firestoreMethods.js, printing error!",
-      err,
-      err.message
-    );
-    Alert.alert(
-      "Error occured when adding adding recurring monthly payment!",
-      err.message
-    );
-  }
-}
-
 export async function getNotificationSettings() {
   try {
     const db = firestore;
@@ -294,17 +312,84 @@ export function editNotificationSettings(newNotifSettings) {
   }
 }
 
-export function addSpendingCategory(uid, newSpendingCatInfo) {
+export async function getAllSpendingCategories() {
   try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
     // Create spending-categories collection
     let spendingCategoryCollectionRef = db
       .collection("users")
       .doc(uid)
-      .collection("spending-category");
+      .collection("spending-categories");
 
+    let allSpendingCats = [];
+    await spendingCategoryCollectionRef.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        allSpendingCats.push({
+          amount: doc.data().maxBudget,
+          name: doc.data().name,
+        });
+      });
+    });
+    return allSpendingCats;
+  } catch (err) {
+    console.log(
+      "Inside firestoreMethods.js, printing error!",
+      err,
+      err.message
+    );
+    Alert.alert(
+      "Error occured when getting all spending categories!",
+      err.message
+    );
+  }
+}
+
+export async function deleteSpendingCategory(categoryToDelete) {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
+    // Create spending-categories collection
+    let spendingCategoryCollectionRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("spending-categories");
+
+    await spendingCategoryCollectionRef
+      .doc(categoryToDelete.name)
+      .delete()
+      .then(() => {
+        console.log("Successfully deleted category!");
+      });
+  } catch (err) {
+    console.log(
+      "Inside firestoreMethods.js, printing error!",
+      err,
+      err.message
+    );
+    Alert.alert(
+      "Error occured when deleting this spending category!",
+      err.message
+    );
+  }
+}
+
+export function addSpendingCategory(newSpendingCatInfo) {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
+    // Create spending-categories collection
+    let spendingCategoryCollectionRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("spending-categories");
+    console.log("printing newSpendingCatInfo", newSpendingCatInfo);
     spendingCategoryCollectionRef.doc(newSpendingCatInfo.name).set({
-      maxBudget: newSpendingCatInfo.maxBudget,
-      moneySpent: newSpendingCatInfo.moneySpent,
+      maxBudget: parseFloat(newSpendingCatInfo.maxBudget),
+      moneySpent: 0,
       name: newSpendingCatInfo.name,
     });
   } catch (err) {
@@ -319,6 +404,7 @@ export function addSpendingCategory(uid, newSpendingCatInfo) {
     );
   }
 }
+
 const rauthenticate = (currentPassword) => {
   let user = auth.currentUser;
   let cred = firebase.auth.EmailAuthProvider.credential(

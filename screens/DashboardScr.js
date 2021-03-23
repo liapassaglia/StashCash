@@ -195,6 +195,8 @@ export default class DashboardScr extends React.Component {
       weeklyFrequency: this.state.weeklySwitch,
       monthlyFrequency: this.state.monthlySwitch,
     });
+
+    // call your
     this.baseState = this.state;
     this.setState({ settingsModalVisible: false });
   };
