@@ -112,7 +112,7 @@ export default () => {
           .signInWithEmailAndPassword(email, password)
           .then(
             () => {
-              console.log(firebase.auth().currentUser); // Prints logged user
+              //console.log(firebase.auth().currentUser); // Prints logged user
               setIsAuthenticated(true);
               console.log("Login successful!");
             },
@@ -130,10 +130,6 @@ export default () => {
           .then(
             () => {
               // Add user to Firestore database
-              console.log(
-                "inside App.js, inside authContext signUp, printing firebase.auth().currentUser.uid",
-                firebase.auth().currentUser.uid
-              );
               addNewUser(firebase.auth().currentUser.uid);
               // Should redirect to login (or login at once)
               Alert.alert(

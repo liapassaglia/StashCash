@@ -1,11 +1,12 @@
 import firebase from "firebase/app";
 import { Alert } from "react-native";
-
+import { firestore, auth } from "../config/firebase";
 // const db = firebase.firestore();
 
 export function addNewUser(uid) {
   try {
-    const db = firebase.firestore();
+    //const db = firebase.firestore();
+    const db = firestore;
     // Create new doc that will store all of the user's data
     db.collection("users").doc(uid).set({ weeklyBudget: 0 });
 
@@ -16,9 +17,6 @@ export function addNewUser(uid) {
       .collection("budget-statistics");
     budgetStatsCollectionRef.doc("points").set({ currentPoints: 0 });
     budgetStatsCollectionRef.doc("streaks").set({ weekStreak: 0 });
-    console.log(
-      "Inside firestoreMethods.js, finished populating budget-statistics collection!"
-    );
 
     // Create notification-settings collection and set default settings
     let notificationSettingsRef = db
@@ -90,14 +88,19 @@ export function addClaimedReward(uid, rewardInfo) {
   }
 }
 
-export function addNewJar(uid, newJarInfo) {
+export function addNewJar(newJarInfo) {
   try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
     // Create jar collection ref
     let jarCollectionRef = db.collection("users").doc(uid).collection("jars");
 
-    jarCollectionRef
-      .doc(newJarInfo.name)
-      .set({ name: newJarInfo.name, goal: newJarInfo.goal, savings: 0 });
+    jarCollectionRef.doc(newJarInfo.name).set({
+      name: newJarInfo.name,
+      goal: parseFloat(newJarInfo.goal),
+      savings: 0,
+    });
   } catch (err) {
     console.log(
       "Inside firestoreMethods.js, printing error!",
@@ -108,14 +111,35 @@ export function addNewJar(uid, newJarInfo) {
   }
 }
 
-export function addSavingsToJar(uid, editJarInfo) {
+export async function getJars() {
   try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
+
+    let userJars = [];
+    let jarCollectionRef = db.collection("users").doc(uid).collection("jars");
+    await jarCollectionRef.get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        userJars.push(doc.data());
+      });
+    });
+    return userJars;
+  } catch (err) {
+    console.log("inside firestoreMethods, getting jars info error");
+    Alert.alert("Error occured when getting your jars!", err.message);
+  }
+}
+
+export function addSavingsToJar(editJarInfo) {
+  try {
+    const db = firestore;
+    const uid = auth.currentUser.uid;
     // Create jar collection ref
     let jarCollectionRef = db.collection("users").doc(uid).collection("jars");
 
     jarCollectionRef
       .doc(editJarInfo.name)
-      .update({ savings: editJarInfo.savingsTotal });
+      .update({ savings: parseFloat(editJarInfo.savingsTotal) });
   } catch (err) {
     console.log(
       "Inside firestoreMethods.js, printing error!",
