@@ -449,3 +449,35 @@ export function changePassword(currentPassword, newPassword) {
     Alert.alert("Error occured when resetting password!", err.message);
   }
 }
+
+export function editPassword(newPassword) {
+  let user = firebase.auth().currentUser;
+
+  user
+    .updatePassword(newPassword)
+    .then(function () {
+      Alert.alert('Password successfully updated');
+      console.log('Password successfully updated');
+    })
+    .catch(function (error) {
+      Alert.alert('Error editing email');
+      console.log(error.message);
+    });
+
+  console.log('Updated User: ', firebase.auth().currentUser);
+}
+
+export function editEmail(newEmail) {
+  let user = firebase.auth().currentUser;
+  console.log('newEmail: ', newEmail);
+
+  user
+    .updateEmail(newEmail)
+    .then(() => {
+      console.log('Email successfully updated');
+    })
+    .catch((error) => {
+      Alert.alert('Error editing password');
+      console.log(error.message);
+    });
+}
