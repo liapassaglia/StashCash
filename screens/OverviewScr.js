@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
-import { SafeAreaView, Dimensions, ScrollView, StyleSheet, Text, View, Image, Modal} from 'react-native';
+import { SafeAreaView, Dimensions, ScrollView, StyleSheet, Text, View, Alert, Modal} from 'react-native';
 import { List, Button, Switch, Card, Title, Paragraph, IconButton, TextInput, ToggleButton } from 'react-native-paper';
+import {Picker} from '@react-native-picker/picker';
 import {
   LineChart,
   BarChart,
@@ -9,16 +10,10 @@ import {
   ContributionGraph,
   StackedBarChart
 } from "react-native-chart-kit";
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const {width} = Dimensions.get('window');
 const {height} = Dimensions.get('window');
-const allData = [
-  { name: 'Gas', alotted: 80, spent: 50, remaining: 30, color: 'rgba(131, 167, 234, 1)', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-  { name: 'Groceries', alotted: 200, spent: 120, remaining: 80, population: 2800000, color: '#000', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-  { name: 'Clothes', alotted: 80, spent: 10, remaining: 70, population: 527612, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-  { name: 'Venmo', alotted: 35, spent: 5, remaining: 30, population: 8538000, color: '#ffffff', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-  { name: 'Other', alotted: 85, spent: 22, remaining: 63, population: 11920000, color: 'rgb(0, 0, 255)', legendFontColor: '#7F7F7F', legendFontSize: 15 }
-]
 
 export default class DashboardScr extends React.Component{
 
@@ -27,71 +22,87 @@ export default class DashboardScr extends React.Component{
     this.userData = [];
     this.dataOverview = [
       {
+        name: "Food",
+        alotted: 40,
+        color: "#EB9341",
+        legendFontColor: "#7F7F7F",
+        legendFontSize: 15
+      },
+      {
+        name: "Ride Fare",
+        alotted: 30,
+        color: "#39A5D6",
+        legendFontColor: "#7F7F7F",
+        legendFontSize: 15
+      },
+      {
+        name: "Entertainment",
+        alotted: 20,
+        color: "#5CBD61",
+        legendFontColor: "#7F7F7F",
+        legendFontSize: 15
+      },
+      {
         name: "Coffee",
-        population: 6,
-        color: "#46A84A",
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15
-      },
-      {
-        name: "Going Out",
-        population: 30,
-        color: "#74D795",
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15
-      },
-      {
-        name: "Gas",
-        population: 15,
-        color: "#24C545",
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15
-      },
-      {
-        name: "Eating Out",
-        population: 10,
-        color: "#819C71",
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15
-      },
-      {
-        name: "Remaining",
-        population: 34,
-        color: "#D0D0D0",
+        alotted: 10,
+        color: "#F0EC2F",
         legendFontColor: "#7F7F7F",
         legendFontSize: 15
       },
     ];
     this.dataCategories = [
       {
-        category: 'Coffee',
-        remaining: 4,
-        spent: 6,
-        alloted: 10
+        category: 'Food',
+        remaining: 13,
+        spent: 27,
+        alloted: 40
       },
       {
-        category: 'Going Out',
+        category: 'Ride Fare',
         remaining: 0,
         spent: 30,
         alloted: 30
       },
       {
-        category: 'Gas',
-        remaining: 20,
+        category: 'Entertainment',
+        remaining: 5,
         spent: 15,
-        alloted: 35
+        alloted: 20
       },
       {
-        category: 'Eating Out',
-        remaining: 10,
-        spent: 25,
-        alloted: 40
+        category: 'Coffee',
+        remaining: 10.00,
+        spent: 4,
+        alloted: 15.00
       }
     ]
     this.state = {
         screenHeight: 0,
         currentIndex: 0,
-        data: [],
+        categoryData: [{
+          category: 'Food',
+          remaining: 13,
+          spent: 27,
+          alloted: 40
+        },
+        {
+          category: 'Ride Fare',
+          remaining: 0,
+          spent: 30,
+          alloted: 30
+        },
+        {
+          category: 'Entertainment',
+          remaining: 5,
+          spent: 15,
+          alloted: 20
+        },
+        {
+          category: 'Coffee',
+          remaining: 10.00,
+          spent: 4,
+          alloted: 15.00
+        }],
         inputModalVisible: false,
         category: '',
         amount: '',
@@ -134,8 +145,27 @@ export default class DashboardScr extends React.Component{
     })
   }
 
+  updatePurchases = (category, amount) => {
+    console.log(category,amount);
+    for (var i=0; i < this.dataCategories.length; i++) {
+      if (this.dataCategories[i].category === category) {
+        let prevData = this.dataCategories[i];
+        console.log(prevData)
+        const updatedCategory = {
+          category: category,
+          remaining: prevData.remaining - amount*1,
+          spent: prevData.spent + amount*1,
+          alloted: 15.00
+        }
+        console.log(updatedCategory)
+        this.dataCategories[i] = updatedCategory;
+      }
+    }
+    this.setState({categoryData: [...this.dataCategories],inputModalVisible:false,amount:'',category:''});
+  }
+
   render(){
-  const {inputModalVisible,category,amount} = this.state;
+  const {inputModalVisible,category,amount,categoryData} = this.state;
   const scrollEnabled = this.state.screenHeight > height;
  
   return (
@@ -174,7 +204,7 @@ export default class DashboardScr extends React.Component{
                 borderRadius: 10,
               },
             }}
-            accessor={"population"}
+            accessor={"alotted"}
             style={{
               marginVertical: 8,
               borderRadius: 16,
@@ -189,7 +219,7 @@ export default class DashboardScr extends React.Component{
                     pagingEnabled horizontal style={{width:355,height}} centerContent
                   >
                     {
-                      this.dataCategories.map((image,index)=>(
+                      categoryData.map((image,index)=>(
                         <Card style={styles.card}>
                           <Card.Content style={styles.cardContent}>
                             <Text style={{alignSelf:'center',fontSize:25,marginTop:20}}>{image.category}</Text>
@@ -244,13 +274,23 @@ export default class DashboardScr extends React.Component{
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                   <Text style={styles.modalText}>Log Purchase</Text>
-                  {/* TODO: change to dropdown menu from categories */}
-                  <TextInput
-                    label="Category"
-                    value={category}
-                    onChangeText={this.setCategory}
-                    style={styles.inputBox}
-                    theme={{ colors: { primary: '#5B5B5B' } }}
+                  <DropDownPicker
+                    items={[
+                      { label: 'Food', value: 'Food', },
+                      { label: 'Ride Fare', value: 'Ride Fare',},
+                      { label: 'Entertainment', value: 'Entertainment',},
+                      { label: 'Coffee', value: 'Coffee', },
+                    ]}
+                    containerStyle={styles.inputBox}
+                    style={{ backgroundColor: '#fafafa' }}
+                    itemStyle={{
+                      justifyContent: 'flex-start',
+                      fontSize:20
+                    }}
+                    dropDownStyle={{ backgroundColor: '#fafafa' }}
+                    onChangeItem={item => this.setState({
+                      category: item.value
+                    })}
                   />
                   <TextInput
                     label="Amount"
@@ -263,7 +303,7 @@ export default class DashboardScr extends React.Component{
                     mode="contained"
                     uppercase={false}
                     style={styles.modalButton}
-                    onPress={() => this.updatePurchases()}
+                    onPress={() => {this.updatePurchases(category,amount)}}
                   >
                     <Text style={styles.modalButtonText}>Submit</Text>
                   </Button>
