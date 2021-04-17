@@ -155,7 +155,7 @@ export default class DashboardScr extends React.Component{
           category: category,
           remaining: prevData.remaining - amount*1,
           spent: prevData.spent + amount*1,
-          alloted: 15.00
+          alloted: prevData.alloted
         }
         console.log(updatedCategory)
         this.dataCategories[i] = updatedCategory;
